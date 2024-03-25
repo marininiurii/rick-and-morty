@@ -1,4 +1,4 @@
-import { CardComponent } from "../../Card/Card";
+import { CardComponent } from "../Card/Card";
 import { SelectField } from "../Select/Select";
 import s from "./Body.module.css";
 import TextField from "@mui/material/TextField";
