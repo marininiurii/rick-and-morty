@@ -1,0 +1,27 @@
+.main {
+    width: 1440px;
+    height: 60px;
+    background: #FFFFFF;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: -2px 0px 8px 2px #0000001A;
+
+}
+
+.image {
+    display: flex;
+    padding-left: 100px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.links {
+    width: 60%;
+    display: flex;
+    gap: 30px;
+    padding-right: 150px;
+    align-items: center;
+    justify-content: flex-end;
+    
+}

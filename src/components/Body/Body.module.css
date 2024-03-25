@@ -1,0 +1,13 @@
+.main {
+    width: 1440px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.logoSection {
+    width: 36%;
+   margin: 40px;
+    
+}
