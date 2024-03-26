@@ -3,10 +3,11 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
+import s from './Card.module.css'
 
 export const CardComponent = () => {
   return (
-    <Card sx={{ maxWidth: 240}}>
+    <Card className={s.card} sx={{ maxWidth: 240}}>
       <CardActionArea>
         <CardMedia
           component="svg"
