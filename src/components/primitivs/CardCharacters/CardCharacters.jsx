@@ -4,11 +4,13 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 
-export const CardCharacters = ({image, name, species, gender, status }) => {
+export const CardCharacters = ({onClick, image, name, species, gender, status, id }) => {
   return (
     <Card
+      onClick={onClick}
       gender={gender}
       status={status}
+      id={id}
       sx={{ maxWidth: 240,
          boxShadow: "0px 2px 4px 0px #00000024, 0px 3px 4px 0px #0000001F, 0px 1px 5px 0px #00000033"}}
     >

@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import { BasicButton } from "../../primitivs/Button/Button";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const MainCharacters = () => {
   const [filters, setFilters] = useState({ type: "", status: "", species: "", gender: "" });
@@ -12,6 +13,7 @@ export const MainCharacters = () => {
   const [searchText, setSearchText] = useState("");
   const [loadComponents, setLoadComponents] = useState(8)
   const [page, setPage] = useState(1)
+  const navigate = useNavigate()
 
 
   const handleInputChange = (event) => {
@@ -28,6 +30,10 @@ export const MainCharacters = () => {
       setLoadComponents(prev => prev + 8)
     }
   };
+  // const handleCharacterDetails = (id) => {
+  //   navigate(`/characters/:${id}`)
+  //   console.log(id);
+  // }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,8 +57,8 @@ export const MainCharacters = () => {
     );
 
     return filteredComponents
-      .map(({ image, name, species }, i) => (
-        <CardCharacters className={s.card} image={image} name={name} species={species} key={i} />
+      .map(({ image, name, species, id }, i) => (
+        <CardCharacters onClick={() => navigate(`/characters/${id}`)} className={s.card} image={image} name={name} species={species} key={i} />
       ))
       .slice(0, loadComponents);
   };
