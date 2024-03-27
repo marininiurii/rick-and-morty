@@ -10,7 +10,7 @@ export const Header = () => {
       <div className={s.links}>
         <Link href="/characters" color='#000000' underline="none">Characters</Link>
         <Link href="/locations" color='#000000' underline="none">Locations</Link>
-        <Link href="#" color='#000000' underline="none">Episodes</Link>
+        <Link href="/episodes" color='#000000' underline="none">Episodes</Link>
       </div>
     </div>
   );

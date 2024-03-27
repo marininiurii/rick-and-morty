@@ -1,12 +1,12 @@
-import { MainCharacters } from '../../MainComponents/MainCharacters/MainCharacters';
 import { Footer } from '../../Footer/Footer';
 import { Header } from '../../Header/Header';
+import { MainEpisodes } from '../../MainComponents/MainEpisodes/MainEpisodes';
 
-export const Characters = () => {
+export const Episodes = () => {
     return (
         <>
          <Header />
-         <MainCharacters />
+         <MainEpisodes/>
          <Footer />
         </>
       );

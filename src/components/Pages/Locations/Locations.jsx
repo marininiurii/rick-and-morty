@@ -1,12 +1,13 @@
 import { Footer } from "../../Footer/Footer";
 import { Header } from "../../Header/Header";
-import s from "./Locations.module.css";
+import { MainLocations } from "../../MainComponents/MainLocations/MainLocations";
+
 
 export const Locations = () => {
   return (
     <>
       <Header />
-      <div>HELLO</div>
+      <MainLocations />
       <Footer />
     </>
   );

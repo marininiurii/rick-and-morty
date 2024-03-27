@@ -1,12 +1,12 @@
-import { SelectField } from "../primitivs/Select/Select";
-import { CardComponent } from "../primitivs/Card/Card";
-import s from "./Body.module.css";
+import { SelectField } from "../../primitivs/Select/Select";
+import { CardCharacters } from "../../primitivs/CardCharacters/CardCharacters";
+import s from "./MainCharacters.module.css";
 import TextField from "@mui/material/TextField";
-import { BasicButton } from "../primitivs/Button/Button";
+import { BasicButton } from "../../primitivs/Button/Button";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-export const Body = ({ children }) => {
+export const MainCharacters = () => {
   const [filters, setFilters] = useState({ type: "", status: "", species: "", gender: "" });
   const [initialState, setState] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -23,27 +23,27 @@ export const Body = ({ children }) => {
   const handleClick = () => {
     if (loadComponents < 20) {
       setLoadComponents(prev => prev + 8)
-    } 
-    
+    } else {
+      setPage(prev => prev + 1)
+      setLoadComponents(prev => prev + 8)
+    }
   };
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(page)
         const response = await axios.get(
           `https://rickandmortyapi.com/api/character/?page=${page}`
         );
-        setState(response.data.results);
-        console.log(response.data.results);
-        console.log(response.data)
+        setState([...initialState, ...response.data.results]);
+
       } catch (error) {
         console.error(error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [page]);
 
   const renderCardComponents = () => {
     const filteredComponents = initialState.filter(({ name }) =>
@@ -52,14 +52,16 @@ export const Body = ({ children }) => {
 
     return filteredComponents
       .map(({ image, name, species }, i) => (
-        <CardComponent image={image} name={name} species={species} key={i} />
+        <CardCharacters className={s.card} image={image} name={name} species={species} key={i} />
       ))
       .slice(0, loadComponents);
   };
 
   return (
     <main className={s.main}>
-      <div className={s.logoSection}>{children}</div>
+      <div className={s.logoSection}>
+        <img src="./logo-general.svg" alt="Логотип" />
+      </div>
       <div className={s.filtersSection}>
         <TextField
           id="outlined-basic"
@@ -88,7 +90,7 @@ export const Body = ({ children }) => {
       </div>
       <div className={s.cardsSection}>{renderCardComponents()}</div>
       <div className={s.buttonSection}>
-        <BasicButton onClick={handleClick}>Load More</BasicButton>
+        <BasicButton onClick={handleClick} className={s.button}>Load More</BasicButton>
       </div>
     </main>
   );
