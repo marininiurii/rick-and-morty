@@ -5,23 +5,23 @@ import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import s from './Card.module.css'
 
-export const CardComponent = () => {
+export const CardComponent = ({image, name, species, gender, status}) => {
   return (
-    <Card className={s.card} sx={{ maxWidth: 240}}>
+    <Card className={s.card} gender={gender} status={status} sx={{ maxWidth: 240}}>
       <CardActionArea>
         <CardMedia
           component="svg"
           width="240"
           height="168"
-          image="./Rick.svg"
+          image={image}
           alt="Rick"
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-          Rick Sanchez
+         {name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Human
+            {species}
           </Typography>
         </CardContent>
       </CardActionArea>

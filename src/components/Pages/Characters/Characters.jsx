@@ -7,7 +7,9 @@ export const Characters = () => {
     return (
         <div className={s.body}>
          <Header />
-         <Body />
+         <Body>
+          <img src="./logo-general.svg" alt="Логотип" />
+          </Body>
          <Footer />
         </div>
       );

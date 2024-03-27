@@ -8,8 +8,8 @@ export const Header = () => {
         <img src="./logo-black 1.svg" alt="Логотип" />
       </div>
       <div className={s.links}>
-        <Link href="#" color='#000000' underline="none">Characters</Link>
-        <Link href="#" color='#000000' underline="none">Locations</Link>
+        <Link href="/characters" color='#000000' underline="none">Characters</Link>
+        <Link href="/locations" color='#000000' underline="none">Locations</Link>
         <Link href="#" color='#000000' underline="none">Episodes</Link>
       </div>
     </div>
