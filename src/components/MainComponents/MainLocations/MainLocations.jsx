@@ -1,15 +1,17 @@
 import { TextField } from "@mui/material";
 import { BasicButton } from "../../primitivs/Button/Button";
 import { SelectField } from "../../primitivs/Select/Select";
-import s from "./MainLocations.module.css";
+import styles from "./MainLocations.module.css";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { CardLocations } from "../../primitivs/CardLocations/CardLocations";
 import { Link } from "react-router-dom";
+import { responseLocationsPage } from "../../../api/ResponseLocationsPage";
+import { data } from "./constants";
+import logoGeneral from "../../../assets/svg/rick-and-morty 1.svg";
 
 export const MainLocations = () => {
   const [filters, setFilters] = useState({ type: "", dimension: "" });
-  const [initialState, setState] = useState([]);
+  const [state, setState] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [loadComponents, setLoadComponents] = useState(8);
   const [page, setPage] = useState(1);
@@ -30,41 +32,29 @@ export const MainLocations = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `https://rickandmortyapi.com/api/location/?page=${page}`
-        );
-        setState([...initialState, ...response.data.results]);
-        console.log(response.data.results);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
+    responseLocationsPage(state, setState, page);
   }, [page]);
 
   const renderCardComponents = () => {
-    const filteredComponents = initialState.filter(({ name }) =>
+    const filteredComponents = state.filter(({ name }) =>
       name.toLowerCase().includes(searchText.toLowerCase())
     );
 
     return filteredComponents
       .map(({ type, dimension, id }, i) => (
-        <Link className={s.link} to={`/locations/${id}`}>
-        <CardLocations type={type} dimension={dimension} key={i} />
+        <Link className={styles.link} to={`/locations/${id}`}>
+          <CardLocations type={type} dimension={dimension} key={i} />
         </Link>
       ))
       .slice(0, loadComponents);
   };
 
   return (
-    <main className={s.main}>
-      <div className={s.logoSection}>
-        <img src="./rick-and-morty 1.svg" alt="Логотип" />
+    <main className={styles.main}>
+      <div className={styles.logoSection}>
+        <img src={logoGeneral} alt="Логотип" />
       </div>
-      <div className={s.filtersSection}>
+      <div className={styles.filtersSection}>
         <TextField
           id="outlined-basic"
           label="Filter by name"
@@ -75,39 +65,20 @@ export const MainLocations = () => {
           value={filters.type}
           name="Type"
           onChange={handleSelectChange}
-          data={{
-            items: [
-              "Planet",
-              "Cluster",
-              "Space station",
-              "Microverse",
-              "Fantasy town",
-            ],
-            label: "Type",
-          }}
-        ></SelectField>
+          data={data[0]}
+        />
         <SelectField
           value={filters.dimension}
           name="Dimension"
           onChange={handleSelectChange}
-          data={{
-            items: [
-              "Dimension C-137",
-              "Fantasy Dimension",
-              "Dimension 5-126",
-              "Replacement Dimension",
-              "Post-Apocalyptic Dimension",
-              "Cronenberg Dimension",
-            ],
-            label: "Dimension",
-          }}
-        ></SelectField>
+          data={data[1]}
+        />
       </div>
-      <div className={s.cardsSection}>
-        {renderCardComponents()}
-      </div>
-      <div className={s.buttonSection}>
-      <BasicButton onClick={handleClick} className={s.button}>Load More</BasicButton>
+      <div className={styles.cardsSection}>{renderCardComponents()}</div>
+      <div className={styles.buttonSection}>
+        <BasicButton onClick={handleClick} className={styles.button}>
+          Load More
+        </BasicButton>
       </div>
     </main>
   );
