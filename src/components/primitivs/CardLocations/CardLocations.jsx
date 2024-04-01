@@ -4,9 +4,10 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import styles from "./CardLocations.module.css";
 
-export const CardLocations = ({ dimension, type }) => {
+export const CardLocations = ({ onClick, dimension, type }) => {
   return (
     <Card
+      onClick={onClick}
       className={styles.wrap}
       sx={{
         minWidth: 240,
@@ -21,7 +22,12 @@ export const CardLocations = ({ dimension, type }) => {
       }}
     >
       <CardContent>
-        <Typography sx={{ fontSize: 20, fontWeight: "bold" }} gutterBottom>
+        <Typography
+          sx={{ fontSize: 20, fontWeight: "bold" }}
+          variant="h5"
+          component="div"
+          gutterBottom
+        >
           {dimension}
         </Typography>
         <Typography sx={{ fontSize: 14 }} variant="h5" component="div">

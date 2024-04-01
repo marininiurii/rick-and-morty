@@ -5,6 +5,8 @@ import { Locations } from "./components/Pages/Locations/Locations";
 import { Suspense } from "react";
 import { Episodes } from "./components/Pages/Episodes/Episodes";
 import { CharacterDetails } from "./components/Pages/CharacterDetails/CharacterDetails";
+import { LocationDetails } from "./components/Pages/LocationDetails/LocationDetails";
+import { EpisodeDetails } from "./components/Pages/EpisodeDetails/EpisodeDetails";
 
 export const App = () => {
   return (
@@ -14,8 +16,9 @@ export const App = () => {
         <Route path="/characters" element={<Characters />} />
         <Route path="/locations" element={<Locations />} />
         <Route path="/episodes" element={<Episodes />} />
-        <Route path="/locations/:locationId" element={<Locations />} />
         <Route path="/characters/:id" element={<CharacterDetails />} />
+        <Route path="/locations/:id" element={<LocationDetails />} />
+        <Route path="/episodes/:id" element={<EpisodeDetails />} />
       </Routes>
     </>
   );

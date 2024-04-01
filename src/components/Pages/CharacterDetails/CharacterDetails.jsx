@@ -4,10 +4,10 @@ import { MainCharactersDetails } from "../../MainComponents/MainCharactersDetail
 
 export const CharacterDetails = () => {
   return (
-    <div>
+    <>
       <Header />
       <MainCharactersDetails />
       <Footer />
-    </div>
+    </>
   );
 };

@@ -5,12 +5,14 @@ import { useState, useEffect } from "react";
 import { CardEpisodes } from "../../primitivs/CardEpisodes/CardEpisodes";
 import { responseEpisodePage } from "../../../api/ResponseEpisodesPage";
 import logoGeneral from "../../../assets/svg/rick-and-morty2 1.svg";
+import { useNavigate } from "react-router-dom";
 
 export const MainEpisodes = () => {
-  const [state, setState] = useState([]);
+  const [episodes, setEpisodes] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [loadComponents, setLoadComponents] = useState(8);
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     setSearchText(event.target.value);
@@ -24,23 +26,33 @@ export const MainEpisodes = () => {
     }
   };
 
+  const getEpisodesPage = async () => {
+    try {
+      const response = await responseEpisodePage(page);
+      setEpisodes(response.data.results);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    responseEpisodePage(state, setState, page);
+    getEpisodesPage();
   }, [page]);
 
   const renderCardComponents = () => {
-    const filteredComponents = state.filter(({ name }) =>
+    const filteredComponents = episodes.filter(({ name }) =>
       name.toLowerCase().includes(searchText.toLowerCase())
     );
 
     return filteredComponents
-      .map(({ name, air_date, episode }, i) => (
+      .map(({ name, air_date, episode, id }) => (
         <CardEpisodes
+          onClick={() => navigate(`/episodes/${id}`)}
           className={styles.card}
           name={name}
           air_date={air_date}
           episode={episode}
-          key={i}
+          key={id}
         />
       ))
       .slice(0, loadComponents);

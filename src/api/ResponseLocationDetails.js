@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export const responseLocationsPage = async (page) => {
+export const responseLocationsDetails = async (id) => {
   try {
     const response = await axios.get(
-      `https://rickandmortyapi.com/api/location/?page=${page}`
+      `https://rickandmortyapi.com/api/location/${id}`
     );
     return response;
   } catch (error) {

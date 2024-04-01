@@ -4,7 +4,7 @@ import logo from "../../assets/svg/logo-black 1.svg";
 
 export const Header = () => {
   return (
-    <div className={styles.main}>
+    <header className={styles.main}>
       <div className={styles.image}>
         <img src={logo} alt="Логотип" />
       </div>
@@ -19,6 +19,6 @@ export const Header = () => {
           Episodes
         </Link>
       </div>
-    </div>
+    </header>
   );
 };

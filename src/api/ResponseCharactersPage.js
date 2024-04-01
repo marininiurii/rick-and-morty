@@ -1,11 +1,11 @@
 import axios from "axios";
 
-export const responseCharactersPage = async (state, setState, page) => {
+export const responseCharactersPage = async (page) => {
   try {
     const response = await axios.get(
       `https://rickandmortyapi.com/api/character/?page=${page}`
     );
-    setState([...state, ...response.data.results]);
+    return response;
   } catch (error) {
     console.error(error);
   }

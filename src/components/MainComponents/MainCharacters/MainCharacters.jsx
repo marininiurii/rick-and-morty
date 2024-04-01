@@ -16,7 +16,7 @@ export const MainCharacters = () => {
     species: "",
     gender: "",
   });
-  const [state, setState] = useState([]);
+  const [characters, setCharacters] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [loadComponents, setLoadComponents] = useState(8);
   const [page, setPage] = useState(1);
@@ -37,24 +37,33 @@ export const MainCharacters = () => {
     }
   };
 
+  const getCharactersPage = async () => {
+    try {
+      const response = await responseCharactersPage(page);
+      setCharacters(response.data.results);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    responseCharactersPage(state, setState, page);
+    getCharactersPage();
   }, [page]);
 
   const renderCardComponents = () => {
-    const filteredComponents = state.filter(({ name }) =>
+    const filteredComponents = characters.filter(({ name }) =>
       name.toLowerCase().includes(searchText.toLowerCase())
     );
 
     return filteredComponents
-      .map(({ image, name, species, id }, i) => (
+      .map(({ image, name, species, id }) => (
         <CardCharacters
           onClick={() => navigate(`/characters/${id}`)}
           className={styles.card}
           image={image}
           name={name}
           species={species}
-          key={i}
+          key={id}
         />
       ))
       .slice(0, loadComponents);
