@@ -1,8 +1,8 @@
 import Button from '@mui/material/Button';
-import s from './Button.module.css'
 
-export const BasicButton = ({onClick, children}) => {
+export const BasicButton = ({onClick, children, className}) => {
   return (
-    <Button onClick={onClick} className={s.button} variant="contained">{children}</Button>
+    <Button onClick={onClick} className={className} variant="contained">{children}</Button>
   );
 }
+

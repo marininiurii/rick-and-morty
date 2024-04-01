@@ -1,0 +1,114 @@
+.main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 15px;
+}
+
+.headSection {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image {
+    border-radius: 50%;
+    border: 5px solid #F2F2F7;
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: 400;
+    color: #081F32;
+}
+
+.logoSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.goBackSection {
+    position: absolute;
+    top: 150px;
+    left: 200px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+a {
+    text-decoration: none;
+}
+
+.infoSection {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+h3 {
+    font-size: 20px;
+    color: #8E8E93;
+    margin-bottom: 45px;
+}
+
+.informations {
+    width: 30%;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+
+}
+
+.episodes {
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+
+}
+
+.spanContainer {
+    width: 413px;
+    height: 88px;
+    margin-left: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    border-bottom: 1px solid #8E8E93;
+}
+
+.spanContainer:hover {
+    background-color: #e5e5f1;
+}
+
+.spanEpisode {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #081F32;
+}
+
+.spanName {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #6E798C;
+}
+
+.spanAirDate {
+    margin: 10px 0 15px 0;
+    font-size: 10px;
+    font-weight: 500;
+    color: #8E8E93;
+}

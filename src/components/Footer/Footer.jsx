@@ -1,9 +1,12 @@
-import s from './Footer.module.css'
+import styles from "./Footer.module.css";
 
 export const Footer = () => {
-    return (
-        <div className={s.main}>
-            <span className={s.span}>Make with ❤️ for the Fortech team</span>
-        </div>
-    )
-}
+  return (
+    <footer className={styles.main}>
+      <span className={styles.span}>
+        Developed <a href="https://github.com/marininiurii">Marinin Iurii </a>
+        for the Fortech
+      </span>
+    </footer>
+  );
+};
