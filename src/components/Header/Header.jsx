@@ -1,6 +1,7 @@
 import styles from "./Header.module.css";
 import Link from "@mui/material/Link";
 import logo from "../../assets/svg/logo-black 1.svg";
+import { BurgerMenu } from "../primitivs/MenuNavBurger/BurgerMenu";
 
 export const Header = () => {
   return (
@@ -19,6 +20,7 @@ export const Header = () => {
           Episodes
         </Link>
       </div>
+      <BurgerMenu className={styles.burger} />
     </header>
   );
 };

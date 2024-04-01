@@ -71,9 +71,7 @@ export const MainCharacters = () => {
 
   return (
     <main className={styles.main}>
-      <div className={styles.logoSection}>
-        <img src={logoGeneral} alt="Логотип" />
-      </div>
+      <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
       <div className={styles.filtersSection}>
         <TextField
           id="outlined-basic"

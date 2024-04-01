@@ -11,7 +11,7 @@
 
 .image {
     display: flex;
-    padding-left: 100px;
+    padding-left: 10%;
     align-items: center;
     justify-content: flex-end;
 }
@@ -20,9 +20,24 @@
     width: 60%;
     display: flex;
     gap: 30px;
-    padding-right: 150px;
+    padding-right: 10%;
     align-items: center;
     justify-content: flex-end;
+}
+
+.burger {
+    display: none;
+}
+
+@media (max-width: 500px) {
+
+    .links a {
+        display: none;
+    }
+    .burger {
+        display: block;
+        margin-right: 5%;
+    }
 }
 
 /* @media (min-width: 992px) {
