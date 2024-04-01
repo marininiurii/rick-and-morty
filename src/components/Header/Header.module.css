@@ -23,5 +23,12 @@
     padding-right: 150px;
     align-items: center;
     justify-content: flex-end;
-    
 }
+
+/* @media (min-width: 992px) {
+    .main {
+        flex: 0 0 66.666667%;
+        max-width: 66.666667%;
+        order: 2;
+      }
+} */

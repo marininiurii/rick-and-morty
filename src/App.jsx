@@ -1,25 +1,29 @@
 import "./App.css";
-import { Characters } from "./components/Pages/Characters/Characters";
 import { Routes, Route } from "react-router-dom";
-import { Locations } from "./components/Pages/Locations/Locations";
 import { Suspense } from "react";
-import { Episodes } from "./components/Pages/Episodes/Episodes";
-import { CharacterDetails } from "./components/Pages/CharacterDetails/CharacterDetails";
-import { LocationDetails } from "./components/Pages/LocationDetails/LocationDetails";
-import { EpisodeDetails } from "./components/Pages/EpisodeDetails/EpisodeDetails";
+import { Header } from "./components/Header/Header";
+import { Footer } from "./components/Footer/Footer";
+import { MainCharacters } from "./components/MainComponents/MainCharacters/MainCharacters";
+import { MainLocations } from "./components/MainComponents/MainLocations/MainLocations";
+import { MainEpisodes } from "./components/MainComponents/MainEpisodes/MainEpisodes";
+import { MainCharactersDetails } from "./components/MainComponents/MainCharactersDetails/MainCharactersDetails";
+import { MainLocationDetails } from "./components/MainComponents/MainLocationDetails/MainLocationDetails";
+import { MainEpisodesDetails } from "./components/MainComponents/MainEpisodesDetails/MainEpisodesDetails";
 
 export const App = () => {
   return (
     <>
+      <Header />
       <Routes>
-        <Route path="/" element={<Characters />} />
-        <Route path="/characters" element={<Characters />} />
-        <Route path="/locations" element={<Locations />} />
-        <Route path="/episodes" element={<Episodes />} />
-        <Route path="/characters/:id" element={<CharacterDetails />} />
-        <Route path="/locations/:id" element={<LocationDetails />} />
-        <Route path="/episodes/:id" element={<EpisodeDetails />} />
+        <Route path="/" element={<MainCharacters />} />
+        <Route path="/characters" element={<MainCharacters />} />
+        <Route path="/locations" element={<MainLocations />} />
+        <Route path="/episodes" element={<MainEpisodes />} />
+        <Route path="/characters/:id" element={<MainCharactersDetails />} />
+        <Route path="/locations/:id" element={<MainLocationDetails />} />
+        <Route path="/episodes/:id" element={<MainEpisodesDetails />} />
       </Routes>
+      <Footer />
     </>
   );
 };
