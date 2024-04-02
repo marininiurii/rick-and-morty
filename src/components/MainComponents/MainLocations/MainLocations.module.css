@@ -8,23 +8,23 @@
 }
 
 .logoSection {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 36%;
-   margin: 40px;
+    max-width: 326px;
+    width: 100%;
+    margin: 40px;
 
 }
 
 .filtersSection {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
     gap: 20px;
 }
 
 .cardsSection {
-    width: 1000px;
+   width: 60%;
    margin-top: 50px;
    display: flex;
    justify-content: space-around;
@@ -41,14 +41,38 @@
     gap: 20px;
 }
 
-.button {
-    width: 154px;
-    height: 36px;
-    background: #F2F9FE;
-    box-shadow: 0px 6px 10px 0px #00000024, 0px 1px 18px 0px #0000001F, 0px 3px 5px 0px #00000033;
-    color: #2196F3;
+
+.modalButton {
+    display: none;
 }
 
-.link {
-    text-decoration: none;
+@media(max-width:840px) {
+    .select {
+        display: none;
+    }
+    .modalButton {
+        display: block;
+    }
+    .modalFilters {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .filtersSection {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .spanModalSection {
+        margin-right: 60%;
+        font-size: 20px;
+        font-weight: 500;
+        color: #000000DE;
+    }
 }

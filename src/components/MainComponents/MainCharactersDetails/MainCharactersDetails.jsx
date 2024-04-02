@@ -55,7 +55,9 @@ export const MainCharactersDetails = () => {
   return !loading ? (
     <div className={styles.main}>
       <div className={styles.headSection}>
-        <ArrowGoBack className={styles.goBackSection} href={"/characters"} />
+        <div className={styles.goBackSection}>
+          <ArrowGoBack className={styles.arrow} href={"/characters"} />
+        </div>
         <div className={styles.logoSection}>
           <img
             className={styles.image}

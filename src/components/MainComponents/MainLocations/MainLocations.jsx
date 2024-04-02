@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { responseLocationsPage } from "../../../api/ResponseLocationsPage";
 import { data } from "./constants";
 import logoGeneral from "../../../assets/svg/rick-and-morty 1.svg";
+import { ModalFiltersButton } from "../../primitivs/ModalFiltersButton/ModalFiltersButton";
 
 export const MainLocations = () => {
   const [filters, setFilters] = useState({ type: "", dimension: "" });
@@ -64,23 +65,41 @@ export const MainLocations = () => {
 
   return (
     <main className={styles.main}>
-      <div className={styles.logoSection}>
-        <img src={logoGeneral} alt="Логотип" />
-      </div>
+      <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
       <div className={styles.filtersSection}>
         <TextField
+          sx={{ minWidth: 312 }}
           id="outlined-basic"
           label="Filter by name"
           variant="outlined"
           onChange={handleInputChange}
         />
+        <ModalFiltersButton className={styles.modalButton}>
+          <div className={styles.modalFilters}>
+            <span className={styles.spanModalSection}>Filters</span>
+            <SelectField
+              value={filters.type}
+              name="Type"
+              onChange={handleSelectChange}
+              data={data[0]}
+            />
+            <SelectField
+              value={filters.dimension}
+              name="Dimension"
+              onChange={handleSelectChange}
+              data={data[1]}
+            />
+          </div>
+        </ModalFiltersButton>
         <SelectField
+          className={styles.select}
           value={filters.type}
           name="Type"
           onChange={handleSelectChange}
           data={data[0]}
         />
         <SelectField
+          className={styles.select}
           value={filters.dimension}
           name="Dimension"
           onChange={handleSelectChange}

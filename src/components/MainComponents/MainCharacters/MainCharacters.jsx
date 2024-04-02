@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { responseCharactersPage } from "../../../api/ResponseCharactersPage";
 import { data } from "./constants";
 import logoGeneral from "../../../assets/svg/logo-general.svg";
+import { ModalFiltersButton } from "../../primitivs/ModalFiltersButton/ModalFiltersButton";
 
 export const MainCharacters = () => {
   const [filters, setFilters] = useState({
@@ -74,24 +75,51 @@ export const MainCharacters = () => {
       <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
       <div className={styles.filtersSection}>
         <TextField
+          sx={{ minWidth: 312 }}
           id="outlined-basic"
           label="Filter by name"
           variant="outlined"
           onChange={handleInputChange}
         />
+        <ModalFiltersButton className={styles.modalButton}>
+          <div className={styles.modalFilters}>
+            <span className={styles.spanModalSection}>Filters</span>
+            <SelectField
+              value={filters.species}
+              name="species"
+              onChange={handleSelectChange}
+              data={data[0]}
+            />
+            <SelectField
+              value={filters.gender}
+              name="gender"
+              onChange={handleSelectChange}
+              data={data[1]}
+            />
+            <SelectField
+              value={filters.status}
+              name="status"
+              onChange={handleSelectChange}
+              data={data[2]}
+            />
+          </div>
+        </ModalFiltersButton>
         <SelectField
+          className={styles.select}
           value={filters.species}
           name="species"
           onChange={handleSelectChange}
           data={data[0]}
         />
         <SelectField
+          className={styles.select}
           value={filters.gender}
           name="gender"
           onChange={handleSelectChange}
           data={data[1]}
         />
         <SelectField
+          className={styles.select}
           value={filters.status}
           name="status"
           onChange={handleSelectChange}

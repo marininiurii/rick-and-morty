@@ -65,18 +65,22 @@ export const MainLocationDetails = () => {
   return (
     <div className={styles.main}>
       <header className={styles.header}>
-        <ArrowGoBack className={styles.goBackSection} href={"/locations"} />
-        <h1>{locationDetails.name}</h1>
-        <div className={styles.infoSection}>
-          <div className={styles.spanContainer}>
-            <span className={styles.spanHead}>Type</span>
-            <span className={styles.spanContent}>{locationDetails.type}</span>
-          </div>
-          <div className={styles.spanContainer}>
-            <span className={styles.spanHead}>Dimension</span>
-            <span className={styles.spanContent}>
-              {locationDetails.dimension}
-            </span>
+        <div className={styles.goBackSection}>
+          <ArrowGoBack className={styles.arrow} href={"/locations"} />
+        </div>
+        <div className={styles.headerSection}>
+          <h1>{locationDetails.name}</h1>
+          <div className={styles.infoSection}>
+            <div className={styles.spanContainer}>
+              <span className={styles.spanHead}>Type</span>
+              <span className={styles.spanContent}>{locationDetails.type}</span>
+            </div>
+            <div className={styles.spanContainer}>
+              <span className={styles.spanHead}>Dimension</span>
+              <span className={styles.spanContent}>
+                {locationDetails.dimension}
+              </span>
+            </div>
           </div>
         </div>
       </header>

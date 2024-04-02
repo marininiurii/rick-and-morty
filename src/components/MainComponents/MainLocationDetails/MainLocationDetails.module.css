@@ -9,19 +9,28 @@
 .header {
     width: 100%;
     display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.headerSection {
+    width: 40%;
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding-right: 15%;
 }
 
 .infoSection {
     width: 30%;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
 }
 
 .spanContainer {
+    min-width: 118px;
     display: flex;
     flex-direction: column;
 
@@ -40,17 +49,27 @@
     margin-top: 5px;
 }
 
-.goBackSection {
-    position: absolute;
-    top: 150px;
-    left: 200px;
+.logoSection {
+    width: 30%;
+    padding-right: 10%;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
+    flex-direction: column;
+}
+
+.goBackSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 10%;
+    height: 200px;
+    padding-right: 10%;
 }
 
 .cardsSection {
-    width: 1000px;
+    width: 100%;
     margin-top: 30px;
     display: flex;
     justify-content: space-around;
@@ -61,12 +80,13 @@
 
 .wrapResidentsCardsContainer {
     margin-top: 100px;
-    width: 1000px;
+    width: 60%;
     display: flex;
     flex-wrap: wrap;
 }
 
 .spanResidents {
+    margin-left: 10px;
     font-size: 20px;
     font-weight: 500;
     color: #8E8E93;

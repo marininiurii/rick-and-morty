@@ -60,12 +60,10 @@ export const MainEpisodes = () => {
 
   return (
     <main className={styles.main}>
-      <div className={styles.logoSection}>
-        <img src={logoGeneral} alt="Логотип" />
-      </div>
+      <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
       <div className={styles.filtersSection}>
         <TextField
-          sx={{ minWidth: 500 }}
+          sx={{ width: 500, margin: "0 5% 0 5%" }}
           id="outlined-basic"
           label="Filter by name or episode (ex. S01 or S01E02)"
           variant="outlined"
