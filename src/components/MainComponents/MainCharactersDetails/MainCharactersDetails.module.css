@@ -90,10 +90,19 @@ h3 {
 
 }
 
+.spanSection {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+}
+
 .spanContainer {
     width: 50%;
     height: 88px;
-    margin-left: 15px;
+    margin: 10px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -101,8 +110,15 @@ h3 {
     border-bottom: 1px solid #8E8E93;
 }
 
+.imageArrowLink {
+    position: relative;
+    bottom: 50%;
+    left: 95%;
+}
+
 .spanContainer:hover {
     background-color: #e5e5f1;
+    border-radius: 1%;
 }
 
 .spanEpisode {

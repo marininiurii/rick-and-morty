@@ -17,7 +17,9 @@ export const MainCharacters = () => {
     species: "",
     gender: "",
   });
+
   const [characters, setCharacters] = useState([]);
+  const [renderCharacters, setRenderCharacters] = useState(8);
   const [searchText, setSearchText] = useState("");
   const [loadComponents, setLoadComponents] = useState(8);
   const [page, setPage] = useState(1);
@@ -30,18 +32,20 @@ export const MainCharacters = () => {
     setFilters({ ...filters, [event.target.name]: event.target.value });
   };
   const handleClick = () => {
-    if (loadComponents < 20) {
+    if (loadComponents < 8) {
       setLoadComponents((prev) => prev + 8);
+      setRenderCharacters((prev) => prev + 8);
     } else {
-      setPage((prev) => prev + 1);
-      setLoadComponents((prev) => prev + 8);
+      if (loadComponents < 20) setPage((prev) => prev + 1);
+      setLoadComponents(0);
+      setRenderCharacters((prev) => prev + 8);
     }
   };
 
   const getCharactersPage = async () => {
     try {
       const response = await responseCharactersPage(page);
-      setCharacters(response.data.results);
+      setCharacters([...characters, ...response.data.results]);
     } catch (error) {
       console.log(error);
     }
@@ -67,7 +71,7 @@ export const MainCharacters = () => {
           key={id}
         />
       ))
-      .slice(0, loadComponents);
+      .slice(0, renderCharacters);
   };
 
   return (

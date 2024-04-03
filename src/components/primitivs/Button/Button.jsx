@@ -1,6 +1,7 @@
 import Button from "@mui/material/Button";
 
 export const BasicButton = ({ onClick, children }) => {
+  console.log("button");
   return (
     <Button
       sx={{
