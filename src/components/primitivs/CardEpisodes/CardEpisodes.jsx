@@ -8,7 +8,8 @@ export const CardEpisodes = ({ onClick, name, episode, air_date }) => {
     <Card
       onClick={onClick}
       sx={{
-        width: 240,
+        width: 270,
+        maxWidth: "100%",
         height: 128,
         display: "flex",
         justifyContent: "center",

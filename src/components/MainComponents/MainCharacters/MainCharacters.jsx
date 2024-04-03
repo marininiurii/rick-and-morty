@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { responseCharactersPage } from "../../../api/ResponseCharactersPage";
 import { data } from "./constants";
 import logoGeneral from "../../../assets/svg/logo-general.svg";
+import { ModalFiltersButton } from "../../primitivs/ModalFiltersButton/ModalFiltersButton";
 
 export const MainCharacters = () => {
   const [filters, setFilters] = useState({
@@ -16,7 +17,9 @@ export const MainCharacters = () => {
     species: "",
     gender: "",
   });
+
   const [characters, setCharacters] = useState([]);
+  const [renderCharacters, setRenderCharacters] = useState(8);
   const [searchText, setSearchText] = useState("");
   const [loadComponents, setLoadComponents] = useState(8);
   const [page, setPage] = useState(1);
@@ -29,18 +32,20 @@ export const MainCharacters = () => {
     setFilters({ ...filters, [event.target.name]: event.target.value });
   };
   const handleClick = () => {
-    if (loadComponents < 20) {
+    if (loadComponents < 8) {
       setLoadComponents((prev) => prev + 8);
+      setRenderCharacters((prev) => prev + 8);
     } else {
-      setPage((prev) => prev + 1);
-      setLoadComponents((prev) => prev + 8);
+      if (loadComponents < 20) setPage((prev) => prev + 1);
+      setLoadComponents(0);
+      setRenderCharacters((prev) => prev + 8);
     }
   };
 
   const getCharactersPage = async () => {
     try {
       const response = await responseCharactersPage(page);
-      setCharacters(response.data.results);
+      setCharacters([...characters, ...response.data.results]);
     } catch (error) {
       console.log(error);
     }
@@ -66,7 +71,7 @@ export const MainCharacters = () => {
           key={id}
         />
       ))
-      .slice(0, loadComponents);
+      .slice(0, renderCharacters);
   };
 
   return (
@@ -74,24 +79,51 @@ export const MainCharacters = () => {
       <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
       <div className={styles.filtersSection}>
         <TextField
+          sx={{ minWidth: 312 }}
           id="outlined-basic"
           label="Filter by name"
           variant="outlined"
           onChange={handleInputChange}
         />
+        <ModalFiltersButton className={styles.modalButton}>
+          <div className={styles.modalFilters}>
+            <span className={styles.spanModalSection}>Filters</span>
+            <SelectField
+              value={filters.species}
+              name="species"
+              onChange={handleSelectChange}
+              data={data[0]}
+            />
+            <SelectField
+              value={filters.gender}
+              name="gender"
+              onChange={handleSelectChange}
+              data={data[1]}
+            />
+            <SelectField
+              value={filters.status}
+              name="status"
+              onChange={handleSelectChange}
+              data={data[2]}
+            />
+          </div>
+        </ModalFiltersButton>
         <SelectField
+          className={styles.select}
           value={filters.species}
           name="species"
           onChange={handleSelectChange}
           data={data[0]}
         />
         <SelectField
+          className={styles.select}
           value={filters.gender}
           name="gender"
           onChange={handleSelectChange}
           data={data[1]}
         />
         <SelectField
+          className={styles.select}
           value={filters.status}
           name="status"
           onChange={handleSelectChange}

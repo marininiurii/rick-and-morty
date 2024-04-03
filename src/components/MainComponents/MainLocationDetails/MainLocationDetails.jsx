@@ -27,6 +27,9 @@ export const MainLocationDetails = () => {
 
   const getLocationCharacters = async () => {
     try {
+      if (locationDetails.residents.length === 0) return;
+      // if (!Array.isArray(locationDetails.residents)) return
+
       const residentsId = await locationDetails.residents.map(
         (url) => url.split("/").slice(-1)[0]
       );
@@ -47,8 +50,17 @@ export const MainLocationDetails = () => {
     }
   }, [loading]);
 
+  console.log("locationsState :>> ", locationsState);
   const renderCharactersLocation = () => {
-    return locationsState.map(({ image, name, species, id }) => {
+    if (locationsState.length === 0) {
+      return <div className={styles.noResidentsContainer}>No Residents</div>;
+    }
+    let data = locationsState;
+    if (!Array.isArray(locationsState)) {
+      data = [locationsState];
+    }
+    console.log("data :>> ", data);
+    return data.map(({ image, name, species, id }) => {
       return (
         <CardCharacters
           onClick={() => navigate(`/characters/${id}`)}
@@ -65,18 +77,22 @@ export const MainLocationDetails = () => {
   return (
     <div className={styles.main}>
       <header className={styles.header}>
-        <ArrowGoBack className={styles.goBackSection} href={"/locations"} />
-        <h1>{locationDetails.name}</h1>
-        <div className={styles.infoSection}>
-          <div className={styles.spanContainer}>
-            <span className={styles.spanHead}>Type</span>
-            <span className={styles.spanContent}>{locationDetails.type}</span>
-          </div>
-          <div className={styles.spanContainer}>
-            <span className={styles.spanHead}>Dimension</span>
-            <span className={styles.spanContent}>
-              {locationDetails.dimension}
-            </span>
+        <div className={styles.goBackSection}>
+          <ArrowGoBack className={styles.arrow} href={"/locations"} />
+        </div>
+        <div className={styles.headerSection}>
+          <h1>{locationDetails.name}</h1>
+          <div className={styles.infoSection}>
+            <div className={styles.spanContainer}>
+              <span className={styles.spanHead}>Type</span>
+              <span className={styles.spanContent}>{locationDetails.type}</span>
+            </div>
+            <div className={styles.spanContainer}>
+              <span className={styles.spanHead}>Dimension</span>
+              <span className={styles.spanContent}>
+                {locationDetails.dimension}
+              </span>
+            </div>
           </div>
         </div>
       </header>

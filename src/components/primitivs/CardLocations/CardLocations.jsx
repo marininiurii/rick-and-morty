@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import styles from "./CardLocations.module.css";
 
-export const CardLocations = ({ onClick, dimension, type }) => {
+export const CardLocations = ({ onClick, name, type }) => {
   return (
     <Card
       onClick={onClick}
@@ -28,7 +28,7 @@ export const CardLocations = ({ onClick, dimension, type }) => {
           component="div"
           gutterBottom
         >
-          {dimension}
+          {name}
         </Typography>
         <Typography sx={{ fontSize: 14 }} variant="h5" component="div">
           {type}

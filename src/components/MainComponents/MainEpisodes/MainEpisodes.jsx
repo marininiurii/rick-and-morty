@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 export const MainEpisodes = () => {
   const [episodes, setEpisodes] = useState([]);
+  const [renderEpisodes, setRenderEpisodes] = useState(8);
   const [searchText, setSearchText] = useState("");
   const [loadComponents, setLoadComponents] = useState(8);
   const [page, setPage] = useState(1);
@@ -18,18 +19,20 @@ export const MainEpisodes = () => {
     setSearchText(event.target.value);
   };
   const handleClick = () => {
-    if (loadComponents < 20) {
+    if (loadComponents < 8) {
       setLoadComponents((prev) => prev + 8);
+      setRenderEpisodes((prev) => prev + 8);
     } else {
-      setPage((prev) => prev + 1);
-      setLoadComponents((prev) => prev + 8);
+      if (loadComponents < 20) setPage((prev) => prev + 1);
+      setLoadComponents(0);
+      setRenderEpisodes((prev) => prev + 8);
     }
   };
 
   const getEpisodesPage = async () => {
     try {
       const response = await responseEpisodePage(page);
-      setEpisodes(response.data.results);
+      setEpisodes([...episodes, ...response.data.results]);
     } catch (error) {
       console.log(error);
     }
@@ -55,17 +58,15 @@ export const MainEpisodes = () => {
           key={id}
         />
       ))
-      .slice(0, loadComponents);
+      .slice(0, renderEpisodes);
   };
 
   return (
     <main className={styles.main}>
-      <div className={styles.logoSection}>
-        <img src={logoGeneral} alt="Логотип" />
-      </div>
+      <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
       <div className={styles.filtersSection}>
         <TextField
-          sx={{ minWidth: 500 }}
+          sx={{ width: 500, margin: "0 5% 0 5%" }}
           id="outlined-basic"
           label="Filter by name or episode (ex. S01 or S01E02)"
           variant="outlined"

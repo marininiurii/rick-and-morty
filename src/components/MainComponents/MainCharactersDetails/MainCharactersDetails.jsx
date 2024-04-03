@@ -5,6 +5,7 @@ import { responseCharacterDetails } from "../../../api/ResponseCharacterDetails"
 import { LoadingComponent } from "../../primitivs/LoadingComponent/LoadingComponent";
 import { responseEpisodePage } from "../../../api/ResponseEpisodesPage";
 import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
+import ArrowLink from "../../../assets/svg/arrow_forward.svg";
 
 export const MainCharactersDetails = () => {
   const { id } = useParams();
@@ -48,6 +49,7 @@ export const MainCharactersDetails = () => {
         <span className={styles.spanEpisode}>{episode}</span>
         <span className={styles.spanName}>{name}</span>
         <span className={styles.spanAirDate}>{air_date}</span>
+        <img className={styles.imageArrowLink} src={ArrowLink} alt="Стрелка" />
       </div>
     </Link>
   ));
@@ -55,7 +57,9 @@ export const MainCharactersDetails = () => {
   return !loading ? (
     <div className={styles.main}>
       <div className={styles.headSection}>
-        <ArrowGoBack className={styles.goBackSection} href={"/characters"} />
+        <div className={styles.goBackSection}>
+          <ArrowGoBack className={styles.arrow} href={"/characters"} />
+        </div>
         <div className={styles.logoSection}>
           <img
             className={styles.image}
@@ -90,12 +94,24 @@ export const MainCharactersDetails = () => {
             <span className={styles.spanEpisode}>Type</span>
             <span className={styles.spanName}>{characterDetails.type}</span>
           </div>
-          <div className={styles.spanContainer}>
-            <span className={styles.spanEpisode}>Location</span>
-            <span className={styles.spanName}>
-              {characterDetails.location.name}
-            </span>
-          </div>
+          <Link
+            className={styles.link}
+            to={`/locations/${
+              characterDetails.location.url.split("/").slice(-1)[0]
+            }`}
+          >
+            <div className={styles.spanContainer}>
+              <span className={styles.spanEpisode}>Location</span>
+              <span className={styles.spanName}>
+                {characterDetails.location.name}
+              </span>
+              <img
+                className={styles.imageArrowLink}
+                src={ArrowLink}
+                alt="Стрелка"
+              />
+            </div>
+          </Link>
         </div>
         <div className={styles.episodes}>
           <h3>Episodes</h3>

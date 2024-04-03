@@ -4,13 +4,15 @@ import { SelectField } from "../../primitivs/Select/Select";
 import styles from "./MainLocations.module.css";
 import { useEffect, useState } from "react";
 import { CardLocations } from "../../primitivs/CardLocations/CardLocations";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { responseLocationsPage } from "../../../api/ResponseLocationsPage";
 import { data } from "./constants";
 import logoGeneral from "../../../assets/svg/rick-and-morty 1.svg";
+import { ModalFiltersButton } from "../../primitivs/ModalFiltersButton/ModalFiltersButton";
 
 export const MainLocations = () => {
   const [filters, setFilters] = useState({ type: "", dimension: "" });
+  const [renderLocations, setRenderLocations] = useState(8);
   const [locations, setLocations] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [loadComponents, setLoadComponents] = useState(8);
@@ -24,18 +26,20 @@ export const MainLocations = () => {
     setFilters({ ...filters, [event.target.name]: event.target.value });
   };
   const handleClick = () => {
-    if (loadComponents < 20) {
+    if (loadComponents < 8) {
+      setRenderLocations((prev) => prev + 8);
       setLoadComponents((prev) => prev + 8);
     } else {
-      setPage((prev) => prev + 1);
-      setLoadComponents((prev) => prev + 8);
+      if (loadComponents < 20) setPage((prev) => prev + 1);
+      setLoadComponents(0);
+      setRenderLocations((prev) => prev + 8);
     }
   };
 
   const getLocationsPage = async () => {
     try {
       const response = await responseLocationsPage(page);
-      setLocations(response.data.results);
+      setLocations([...locations, ...response.data.results]);
     } catch (error) {
       console.log(error);
     }
@@ -49,38 +53,55 @@ export const MainLocations = () => {
     const filteredComponents = locations.filter(({ name }) =>
       name.toLowerCase().includes(searchText.toLowerCase())
     );
-
     return filteredComponents
-      .map(({ type, dimension, id }) => (
+      .map(({ type, name, id }) => (
         <CardLocations
           onClick={() => navigate(`/locations/${id}`)}
           type={type}
-          dimension={dimension}
+          name={name}
           key={id}
         />
       ))
-      .slice(0, loadComponents);
+      .slice(0, renderLocations);
   };
 
   return (
     <main className={styles.main}>
-      <div className={styles.logoSection}>
-        <img src={logoGeneral} alt="Логотип" />
-      </div>
+      <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
       <div className={styles.filtersSection}>
         <TextField
+          sx={{ minWidth: 312 }}
           id="outlined-basic"
           label="Filter by name"
           variant="outlined"
           onChange={handleInputChange}
         />
+        <ModalFiltersButton className={styles.modalButton}>
+          <div className={styles.modalFilters}>
+            <span className={styles.spanModalSection}>Filters</span>
+            <SelectField
+              value={filters.type}
+              name="Type"
+              onChange={handleSelectChange}
+              data={data[0]}
+            />
+            <SelectField
+              value={filters.dimension}
+              name="Dimension"
+              onChange={handleSelectChange}
+              data={data[1]}
+            />
+          </div>
+        </ModalFiltersButton>
         <SelectField
+          className={styles.select}
           value={filters.type}
           name="Type"
           onChange={handleSelectChange}
           data={data[0]}
         />
         <SelectField
+          className={styles.select}
           value={filters.dimension}
           name="Dimension"
           onChange={handleSelectChange}

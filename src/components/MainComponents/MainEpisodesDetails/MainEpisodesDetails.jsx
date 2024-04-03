@@ -62,18 +62,24 @@ export const MainEpisodesDetails = () => {
   return (
     <div className={styles.main}>
       <header className={styles.header}>
-        <ArrowGoBack className={styles.goBackSection} href={"/episodes"} />
-        <h1>{episodeDetails.name}</h1>
-        <div className={styles.infoSection}>
-          <div className={styles.spanContainer}>
-            <span className={styles.spanHead}>Episode</span>
-            <span className={styles.spanContent}>{episodeDetails.episode}</span>
-          </div>
-          <div className={styles.spanContainer}>
-            <span className={styles.spanHead}>Date</span>
-            <span className={styles.spanContent}>
-              {episodeDetails.air_date}
-            </span>
+        <div className={styles.goBackSection}>
+          <ArrowGoBack className={styles.arrow} href={"/episodes"} />
+        </div>
+        <div className={styles.headerSection}>
+          <h1>{episodeDetails.name}</h1>
+          <div className={styles.infoSection}>
+            <div className={styles.spanContainer}>
+              <span className={styles.spanHead}>Episode</span>
+              <span className={styles.spanContent}>
+                {episodeDetails.episode}
+              </span>
+            </div>
+            <div className={styles.spanContainer}>
+              <span className={styles.spanHead}>Date</span>
+              <span className={styles.spanContent}>
+                {episodeDetails.air_date}
+              </span>
+            </div>
           </div>
         </div>
       </header>
