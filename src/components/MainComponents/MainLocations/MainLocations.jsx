@@ -38,7 +38,7 @@ export const MainLocations = () => {
     }
   };
 
-  const getLocationsPage = async (searchText) => {
+  const getLocationsPage = async () => {
     const path = "location";
     try {
       const response = await responsePage(path, page, searchText);
