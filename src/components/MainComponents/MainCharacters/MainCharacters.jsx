@@ -5,12 +5,14 @@ import TextField from "@mui/material/TextField";
 import { BasicButton } from "../../primitivs/Button/Button";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { responseCharactersPage } from "../../../api/ResponseCharactersPage";
+import { responsePage } from "../../../api/ResponsePage";
 import { data } from "./constants";
 import logoGeneral from "../../../assets/svg/logo-general.svg";
 import { ModalFiltersButton } from "../../primitivs/ModalFiltersButton/ModalFiltersButton";
 
 export const MainCharacters = () => {
+  const PREVIEW_VALUE_STEP = 8;
+
   const [filters, setFilters] = useState({
     type: "",
     status: "",
@@ -19,32 +21,36 @@ export const MainCharacters = () => {
   });
 
   const [characters, setCharacters] = useState([]);
-  const [renderCharacters, setRenderCharacters] = useState(8);
+  const [renderCharacters, setRenderCharacters] = useState(PREVIEW_VALUE_STEP);
   const [searchText, setSearchText] = useState("");
-  const [loadComponents, setLoadComponents] = useState(8);
-  const [page, setPage] = useState(1);
+  const [loadComponents, setLoadComponents] = useState(PREVIEW_VALUE_STEP);
+  const [page, setPage] = useState(0);
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
+    setCharacters([]);
+    setPage(0);
     setSearchText(event.target.value);
   };
   const handleSelectChange = (event) => {
     setFilters({ ...filters, [event.target.name]: event.target.value });
   };
   const handleClick = () => {
-    if (loadComponents < 8) {
-      setLoadComponents((prev) => prev + 8);
-      setRenderCharacters((prev) => prev + 8);
-    } else {
-      if (loadComponents < 20) setPage((prev) => prev + 1);
-      setLoadComponents(0);
-      setRenderCharacters((prev) => prev + 8);
-    }
+    // if (loadComponents < PREVIEW_VALUE_STEP) {
+    //   setLoadComponents((prev) => prev + PREVIEW_VALUE_STEP);
+    //   setRenderCharacters((prev) => prev + PREVIEW_VALUE_STEP);
+    // } else {
+    //   if (loadComponents < 20) setPage((prev) => prev + 1);
+    //   setLoadComponents(0);
+    //   setRenderCharacters((prev) => prev + PREVIEW_VALUE_STEP);
+    // }
+    setRenderCharacters((prev) => prev + PREVIEW_VALUE_STEP);
   };
 
   const getCharactersPage = async () => {
+    const path = "character";
     try {
-      const response = await responseCharactersPage(page);
+      const response = await responsePage(path, page, searchText);
       setCharacters([...characters, ...response.data.results]);
     } catch (error) {
       console.log(error);
@@ -52,15 +58,15 @@ export const MainCharacters = () => {
   };
 
   useEffect(() => {
-    getCharactersPage();
-  }, [page]);
+    // if (loadComponents < characters.length) {
+    //   setPage((prev) => prev + 1);
+    // }
+    getCharactersPage(page, searchText);
+  }, [page, searchText]);
 
   const renderCardComponents = () => {
-    const filteredComponents = characters.filter(({ name }) =>
-      name.toLowerCase().includes(searchText.toLowerCase())
-    );
-
-    return filteredComponents
+    return characters
+      .slice(0, renderCharacters)
       .map(({ image, name, species, id }) => (
         <CardCharacters
           onClick={() => navigate(`/characters/${id}`)}
@@ -70,8 +76,7 @@ export const MainCharacters = () => {
           species={species}
           key={id}
         />
-      ))
-      .slice(0, renderCharacters);
+      ));
   };
 
   return (

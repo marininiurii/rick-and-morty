@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
 import styles from "./MainEpisodesDetails.module.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { responseEpisodeDetails } from "../../../api/ResponseEpisodeDetails";
-import { responseCharacterDetails } from "../../../api/ResponseCharacterDetails";
 import { CardCharacters } from "../../primitivs/CardCharacters/CardCharacters";
+import { responseDetails } from "../../../api/ResponseDetails";
 
 export const MainEpisodesDetails = () => {
   const [episodeDetails, setEpisodeDetails] = useState({}); // объект с информацией об эпизоде
@@ -14,9 +13,10 @@ export const MainEpisodesDetails = () => {
   const navigate = useNavigate();
 
   const getEpisodeDetails = async () => {
+    const path = "episode";
     try {
-      const response = await responseEpisodeDetails(id);
-      await setEpisodeDetails(response.data); // episodeDetails детали конкретного эпизода.
+      const response = await responseDetails(path, id);
+      await setEpisodeDetails(response); // episodeDetails детали конкретного эпизода.
     } catch (error) {
       console.log(error);
     } finally {
@@ -25,15 +25,16 @@ export const MainEpisodesDetails = () => {
   };
 
   const getEpisodesCharacters = async () => {
+    const path = "character";
     try {
       const charactersId = await episodeDetails.characters.map(
         (url) => url.split("/").slice(-1)[0]
       );
-      const responseCharactersEpisodesCards = await responseCharacterDetails(
+      const responseCharactersEpisodesCards = await responseDetails(
+        path,
         charactersId
       );
       await setEpisodeCharacters(responseCharactersEpisodesCards);
-      console.log("episodeCharacters :>> ", episodeCharacters);
     } catch (error) {
       console.log(error);
     }

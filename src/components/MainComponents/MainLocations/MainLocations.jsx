@@ -5,10 +5,10 @@ import styles from "./MainLocations.module.css";
 import { useEffect, useState } from "react";
 import { CardLocations } from "../../primitivs/CardLocations/CardLocations";
 import { useNavigate } from "react-router-dom";
-import { responseLocationsPage } from "../../../api/ResponseLocationsPage";
 import { data } from "./constants";
 import logoGeneral from "../../../assets/svg/rick-and-morty 1.svg";
 import { ModalFiltersButton } from "../../primitivs/ModalFiltersButton/ModalFiltersButton";
+import { responsePage } from "../../../api/ResponsePage";
 
 export const MainLocations = () => {
   const [filters, setFilters] = useState({ type: "", dimension: "" });
@@ -16,10 +16,12 @@ export const MainLocations = () => {
   const [locations, setLocations] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [loadComponents, setLoadComponents] = useState(8);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
+    setLocations([]);
+    setPage(0);
     setSearchText(event.target.value);
   };
   const handleSelectChange = (event) => {
@@ -36,9 +38,10 @@ export const MainLocations = () => {
     }
   };
 
-  const getLocationsPage = async () => {
+  const getLocationsPage = async (searchText) => {
+    const path = "location";
     try {
-      const response = await responseLocationsPage(page);
+      const response = await responsePage(path, page, searchText);
       setLocations([...locations, ...response.data.results]);
     } catch (error) {
       console.log(error);
@@ -46,14 +49,11 @@ export const MainLocations = () => {
   };
 
   useEffect(() => {
-    getLocationsPage();
-  }, [page]);
+    getLocationsPage(searchText);
+  }, [page, searchText]);
 
   const renderCardComponents = () => {
-    const filteredComponents = locations.filter(({ name }) =>
-      name.toLowerCase().includes(searchText.toLowerCase())
-    );
-    return filteredComponents
+    return locations
       .map(({ type, name, id }) => (
         <CardLocations
           onClick={() => navigate(`/locations/${id}`)}

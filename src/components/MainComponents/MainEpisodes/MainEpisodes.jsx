@@ -3,19 +3,23 @@ import TextField from "@mui/material/TextField";
 import { BasicButton } from "../../primitivs/Button/Button";
 import { useState, useEffect } from "react";
 import { CardEpisodes } from "../../primitivs/CardEpisodes/CardEpisodes";
-import { responseEpisodePage } from "../../../api/ResponseEpisodesPage";
 import logoGeneral from "../../../assets/svg/rick-and-morty2 1.svg";
 import { useNavigate } from "react-router-dom";
+import { responsePage } from "../../../api/ResponsePage";
 
 export const MainEpisodes = () => {
+  const PREVIEW_VALUE_STEP = 8;
+
   const [episodes, setEpisodes] = useState([]);
-  const [renderEpisodes, setRenderEpisodes] = useState(8);
+  const [renderEpisodes, setRenderEpisodes] = useState(PREVIEW_VALUE_STEP);
   const [searchText, setSearchText] = useState("");
-  const [loadComponents, setLoadComponents] = useState(8);
+  const [loadComponents, setLoadComponents] = useState(PREVIEW_VALUE_STEP);
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
+    setEpisodes([]);
+    setPage(0);
     setSearchText(event.target.value);
   };
   const handleClick = () => {
@@ -29,9 +33,10 @@ export const MainEpisodes = () => {
     }
   };
 
-  const getEpisodesPage = async () => {
+  const getEpisodesPage = async (searchText) => {
+    const path = "episode";
     try {
-      const response = await responseEpisodePage(page);
+      const response = await responsePage(path, page, searchText);
       setEpisodes([...episodes, ...response.data.results]);
     } catch (error) {
       console.log(error);
@@ -39,15 +44,11 @@ export const MainEpisodes = () => {
   };
 
   useEffect(() => {
-    getEpisodesPage();
-  }, [page]);
+    getEpisodesPage(searchText);
+  }, [page, searchText]);
 
   const renderCardComponents = () => {
-    const filteredComponents = episodes.filter(({ name }) =>
-      name.toLowerCase().includes(searchText.toLowerCase())
-    );
-
-    return filteredComponents
+    return episodes
       .map(({ name, air_date, episode, id }) => (
         <CardEpisodes
           onClick={() => navigate(`/episodes/${id}`)}

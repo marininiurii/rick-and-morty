@@ -2,9 +2,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
 import styles from "./MainLocationDetails.module.css";
 import { useEffect, useState } from "react";
-import { responseLocationsDetails } from "../../../api/ResponseLocationDetails";
 import { CardCharacters } from "../../primitivs/CardCharacters/CardCharacters";
-import { responseCharacterDetails } from "../../../api/ResponseCharacterDetails";
+import { responseDetails } from "../../../api/ResponseDetails";
 
 export const MainLocationDetails = () => {
   const { id } = useParams();
@@ -14,10 +13,11 @@ export const MainLocationDetails = () => {
   const navigate = useNavigate();
 
   const getLocationDetails = async () => {
+    const path = "location";
     try {
-      const response = await responseLocationsDetails(id);
+      const response = await responseDetails(path, id);
       // locationDetails детали конкретной локации. Приходит объект локации с именем датой и тд
-      await setLocationDetails(response.data);
+      await setLocationDetails(response);
     } catch (error) {
       console.log(error);
     } finally {
@@ -26,6 +26,7 @@ export const MainLocationDetails = () => {
   };
 
   const getLocationCharacters = async () => {
+    const path = "character";
     try {
       if (locationDetails.residents.length === 0) return;
       // if (!Array.isArray(locationDetails.residents)) return
@@ -33,7 +34,8 @@ export const MainLocationDetails = () => {
       const residentsId = await locationDetails.residents.map(
         (url) => url.split("/").slice(-1)[0]
       );
-      const responseCharactersDetailsCards = await responseCharacterDetails(
+      const responseCharactersDetailsCards = await responseDetails(
+        path,
         residentsId
       );
       // locationsState содержит коллекцию объектов с информацией о персонажах
@@ -50,7 +52,6 @@ export const MainLocationDetails = () => {
     }
   }, [loading]);
 
-  console.log("locationsState :>> ", locationsState);
   const renderCharactersLocation = () => {
     if (locationsState.length === 0) {
       return <div className={styles.noResidentsContainer}>No Residents</div>;
@@ -59,7 +60,7 @@ export const MainLocationDetails = () => {
     if (!Array.isArray(locationsState)) {
       data = [locationsState];
     }
-    console.log("data :>> ", data);
+
     return data.map(({ image, name, species, id }) => {
       return (
         <CardCharacters

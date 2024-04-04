@@ -1,11 +1,10 @@
 import styles from "./MainCharactersDetails.module.css";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { responseCharacterDetails } from "../../../api/ResponseCharacterDetails";
 import { LoadingComponent } from "../../primitivs/LoadingComponent/LoadingComponent";
-import { responseEpisodePage } from "../../../api/ResponseEpisodesPage";
 import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
 import ArrowLink from "../../../assets/svg/arrow_forward.svg";
+import { responseDetails } from "../../../api/ResponseDetails";
 
 export const MainCharactersDetails = () => {
   const { id } = useParams();
@@ -14,8 +13,9 @@ export const MainCharactersDetails = () => {
   const [episodeState, setEpisodeState] = useState([]);
 
   const getCharacterDetails = async () => {
+    const path = "character";
     try {
-      const response = await responseCharacterDetails(id);
+      const response = await responseDetails(path, id);
       setCharacterDetails(response);
     } catch (error) {
       console.log(error);
@@ -25,12 +25,13 @@ export const MainCharactersDetails = () => {
   };
 
   const getEpisodePage = async () => {
+    const path = "episode";
     try {
       const episodesId = await characterDetails.episode.map(
         (url) => url.split("/").slice(-1)[0]
       );
-      const respPage = await responseEpisodePage(episodesId);
-      setEpisodeState(respPage.data.results);
+      const respPage = await responseDetails(path, episodesId);
+      setEpisodeState(respPage);
     } catch (error) {
       console.log(error);
     }
@@ -43,16 +44,26 @@ export const MainCharactersDetails = () => {
     }
   }, [loading]);
 
-  const renderEpisodes = episodeState.map(({ episode, name, air_date, id }) => (
-    <Link className={styles.link} key={id} to={`/episodes/${id}`}>
-      <div className={styles.spanContainer}>
-        <span className={styles.spanEpisode}>{episode}</span>
-        <span className={styles.spanName}>{name}</span>
-        <span className={styles.spanAirDate}>{air_date}</span>
-        <img className={styles.imageArrowLink} src={ArrowLink} alt="Стрелка" />
-      </div>
-    </Link>
-  ));
+  const renderEpisodes = () => {
+    let data = episodeState;
+    if (!Array.isArray(episodeState)) {
+      data = [episodeState];
+    }
+    return data.map(({ episode, name, air_date, id }) => (
+      <Link className={styles.link} key={id} to={`/episodes/${id}`}>
+        <div className={styles.spanContainer}>
+          <span className={styles.spanEpisode}>{episode}</span>
+          <span className={styles.spanName}>{name}</span>
+          <span className={styles.spanAirDate}>{air_date}</span>
+          <img
+            className={styles.imageArrowLink}
+            src={ArrowLink}
+            alt="Стрелка"
+          />
+        </div>
+      </Link>
+    ));
+  };
 
   return !loading ? (
     <div className={styles.main}>
@@ -115,7 +126,7 @@ export const MainCharactersDetails = () => {
         </div>
         <div className={styles.episodes}>
           <h3>Episodes</h3>
-          {renderEpisodes}
+          {renderEpisodes()}
         </div>
       </div>
     </div>
