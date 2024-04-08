@@ -22,44 +22,41 @@ export const MainCharacters = () => {
   const [characters, setCharacters] = useState([]);
   const [renderCharacters, setRenderCharacters] = useState(PREVIEW_VALUE_STEP);
   const [searchText, setSearchText] = useState("");
-  const [loadComponents, setLoadComponents] = useState(PREVIEW_VALUE_STEP);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     setCharacters([]);
-    setPage(0);
     setSearchText(event.target.value);
   };
   const handleSelectChange = (event) => {
+    setCharacters([]);
     setFilters({ ...filters, [event.target.name]: event.target.value });
   };
   const handleClick = () => {
+    if (renderCharacters > characters.length) {
+      setPage((prev) => prev + 1);
+    }
     setRenderCharacters((prev) => prev + PREVIEW_VALUE_STEP);
-    setLoadComponents((prev) => prev + PREVIEW_VALUE_STEP);
   };
 
   const getCharactersPage = async () => {
     const path = "character";
     try {
-      const response = await responsePage(path, page, searchText);
-      setCharacters([...characters, ...response.data.results]);
+      const response = await responsePage(path, page, searchText, filters);
+      setCharacters((prevCharacters) => [...prevCharacters, ...response.data.results]);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    if (renderCharacters > 20) {
-      setRenderCharacters(0);
-      setPage((prev) => prev + 1);
-    }
-    getCharactersPage(page, searchText);
-  }, [page, searchText]);
+    getCharactersPage();
+  }, [page, searchText, filters]);
 
   const renderCardComponents = () => {
     return characters
-      .slice(0, loadComponents)
+      .slice(0, renderCharacters)
       .map(({ image, name, species, id }) => (
         <CardCharacters
           onClick={() => navigate(`/characters/${id}`)}

@@ -11,49 +11,47 @@ import { ModalFiltersButton } from "../../primitivs/ModalFiltersButton/ModalFilt
 import { responsePage } from "../../../api/ResponsePage";
 
 export const MainLocations = () => {
+  const PREVIEW_VALUE_STEP = 8;
+
   const [filters, setFilters] = useState({ type: "", dimension: "" });
-  const [renderLocations, setRenderLocations] = useState(8);
+  const [renderLocations, setRenderLocations] = useState(PREVIEW_VALUE_STEP);
   const [locations, setLocations] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const [loadComponents, setLoadComponents] = useState(8);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     setLocations([]);
-    setPage(0);
     setSearchText(event.target.value);
   };
   const handleSelectChange = (event) => {
+    setLocations([]);
     setFilters({ ...filters, [event.target.name]: event.target.value });
   };
   const handleClick = () => {
-    if (loadComponents < 8) {
-      setRenderLocations((prev) => prev + 8);
-      setLoadComponents((prev) => prev + 8);
-    } else {
-      if (loadComponents < 20) setPage((prev) => prev + 1);
-      setLoadComponents(0);
-      setRenderLocations((prev) => prev + 8);
+    if (renderLocations > locations.length) {
+      setPage((prev) => prev + 1)
     }
+    setRenderLocations((prev) => prev + PREVIEW_VALUE_STEP);
   };
 
   const getLocationsPage = async () => {
     const path = "location";
     try {
-      const response = await responsePage(path, page, searchText);
-      setLocations([...locations, ...response.data.results]);
+      const response = await responsePage(path, page, searchText, filters);
+      setLocations((prevLocations) => [...prevLocations, ...response.data.results]);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getLocationsPage(searchText);
-  }, [page, searchText]);
+    getLocationsPage();
+  }, [page, searchText, filters]);
 
   const renderCardComponents = () => {
     return locations
+      .slice(0, renderLocations)
       .map(({ type, name, id }) => (
         <CardLocations
           onClick={() => navigate(`/locations/${id}`)}
@@ -62,7 +60,6 @@ export const MainLocations = () => {
           key={id}
         />
       ))
-      .slice(0, renderLocations);
   };
 
   return (
@@ -81,13 +78,13 @@ export const MainLocations = () => {
             <span className={styles.spanModalSection}>Filters</span>
             <SelectField
               value={filters.type}
-              name="Type"
+              name="type"
               onChange={handleSelectChange}
               data={data[0]}
             />
             <SelectField
               value={filters.dimension}
-              name="Dimension"
+              name="dimension"
               onChange={handleSelectChange}
               data={data[1]}
             />
@@ -96,14 +93,14 @@ export const MainLocations = () => {
         <SelectField
           className={styles.select}
           value={filters.type}
-          name="Type"
+          name="type"
           onChange={handleSelectChange}
           data={data[0]}
         />
         <SelectField
           className={styles.select}
           value={filters.dimension}
-          name="Dimension"
+          name="dimension"
           onChange={handleSelectChange}
           data={data[1]}
         />

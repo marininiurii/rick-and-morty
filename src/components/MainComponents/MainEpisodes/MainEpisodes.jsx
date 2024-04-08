@@ -13,42 +13,38 @@ export const MainEpisodes = () => {
   const [episodes, setEpisodes] = useState([]);
   const [renderEpisodes, setRenderEpisodes] = useState(PREVIEW_VALUE_STEP);
   const [searchText, setSearchText] = useState("");
-  const [loadComponents, setLoadComponents] = useState(PREVIEW_VALUE_STEP);
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     setEpisodes([]);
-    setPage(0);
     setSearchText(event.target.value);
   };
   const handleClick = () => {
-    if (loadComponents < 8) {
-      setLoadComponents((prev) => prev + 8);
-      setRenderEpisodes((prev) => prev + 8);
-    } else {
-      if (loadComponents < 20) setPage((prev) => prev + 1);
-      setLoadComponents(0);
-      setRenderEpisodes((prev) => prev + 8);
+    if (renderEpisodes > episodes.length) {
+      setPage((prev) => prev + 1)
     }
+    setRenderEpisodes((prev) => prev + PREVIEW_VALUE_STEP)
   };
 
-  const getEpisodesPage = async (searchText) => {
+  const getEpisodesPage = async () => {
     const path = "episode";
+    const filters = {}
     try {
-      const response = await responsePage(path, page, searchText);
-      setEpisodes([...episodes, ...response.data.results]);
+      const response = await responsePage(path, page, searchText, filters);
+      setEpisodes((prevEpisodes) => [...prevEpisodes, ...response.data.results]);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getEpisodesPage(searchText);
+    getEpisodesPage();
   }, [page, searchText]);
-
+console.log('episodes :>> ', episodes);
   const renderCardComponents = () => {
     return episodes
+      .slice(0, renderEpisodes)
       .map(({ name, air_date, episode, id }) => (
         <CardEpisodes
           onClick={() => navigate(`/episodes/${id}`)}
@@ -59,7 +55,6 @@ export const MainEpisodes = () => {
           key={id}
         />
       ))
-      .slice(0, renderEpisodes);
   };
 
   return (
