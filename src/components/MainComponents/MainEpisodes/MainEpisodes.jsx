@@ -6,9 +6,10 @@ import { CardEpisodes } from "../../primitivs/CardEpisodes/CardEpisodes";
 import logoGeneral from "../../../assets/svg/rick-and-morty2 1.svg";
 import { useNavigate } from "react-router-dom";
 import { responsePage } from "../../../api/ResponsePage";
+import { TextFieldComponent } from "../../primitivs/TextField/TextField";
 
 export const MainEpisodes = () => {
-  const PREVIEW_VALUE_STEP = 8;
+  const PREVIEW_VALUE_STEP = 12;
 
   const [episodes, setEpisodes] = useState([]);
   const [renderEpisodes, setRenderEpisodes] = useState(PREVIEW_VALUE_STEP);
@@ -22,17 +23,20 @@ export const MainEpisodes = () => {
   };
   const handleClick = () => {
     if (renderEpisodes > episodes.length) {
-      setPage((prev) => prev + 1)
+      setPage((prev) => prev + 1);
     }
-    setRenderEpisodes((prev) => prev + PREVIEW_VALUE_STEP)
+    setRenderEpisodes((prev) => prev + PREVIEW_VALUE_STEP);
   };
 
   const getEpisodesPage = async () => {
     const path = "episode";
-    const filters = {}
+    const filters = {};
     try {
       const response = await responsePage(path, page, searchText, filters);
-      setEpisodes((prevEpisodes) => [...prevEpisodes, ...response.data.results]);
+      setEpisodes((prevEpisodes) => [
+        ...prevEpisodes,
+        ...response.data.results,
+      ]);
     } catch (error) {
       console.log(error);
     }
@@ -41,7 +45,7 @@ export const MainEpisodes = () => {
   useEffect(() => {
     getEpisodesPage();
   }, [page, searchText]);
-console.log('episodes :>> ', episodes);
+  console.log("episodes :>> ", episodes);
   const renderCardComponents = () => {
     return episodes
       .slice(0, renderEpisodes)
@@ -54,18 +58,16 @@ console.log('episodes :>> ', episodes);
           episode={episode}
           key={id}
         />
-      ))
+      ));
   };
 
   return (
     <main className={styles.main}>
       <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
       <div className={styles.filtersSection}>
-        <TextField
-          sx={{ width: 500, margin: "0 5% 0 5%" }}
-          id="outlined-basic"
-          label="Filter by name or episode (ex. S01 or S01E02)"
-          variant="outlined"
+        <TextFieldComponent
+          sx={{ maxWidth: 500, width: "100%", margin: "0 5% 0 5%" }}
+          label={"Filter by name or episode (ex. S01 or S01E02)"}
           onChange={handleInputChange}
         />
       </div>

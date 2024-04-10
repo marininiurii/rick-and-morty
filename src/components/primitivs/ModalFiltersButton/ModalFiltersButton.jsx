@@ -10,7 +10,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  maxWidth: 300,
+  maxWidth: 240,
   width: "100%",
   bgcolor: "background.paper",
   border: "2px solid #000",
@@ -27,7 +27,7 @@ export const ModalFiltersButton = ({ children, className }) => {
     <div className={className}>
       <Button
         sx={{
-          width: 312,
+          width: 240,
           height: 56,
           background: "#F2F9FE",
           boxShadow: "0px 6px 10px 0px #00000024",

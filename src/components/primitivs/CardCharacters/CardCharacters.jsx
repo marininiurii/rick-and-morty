@@ -21,6 +21,8 @@ export const CardCharacters = ({
       id={id}
       sx={{
         maxWidth: 240,
+        cursor: "pointer",
+        fontSize: 20,
         boxShadow:
           "0px 2px 4px 0px #00000024, 0px 3px 4px 0px #0000001F, 0px 1px 5px 0px #00000033",
       }}
@@ -28,8 +30,8 @@ export const CardCharacters = ({
       <CardActionArea>
         <CardMedia
           component="svg"
-          width="240"
-          height="168"
+          maxWidth="100%"
+          height="auto"
           image={image}
           alt="Rick"
         />

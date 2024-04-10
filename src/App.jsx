@@ -1,4 +1,4 @@
-import "./App.css";
+import styles from "./App.module.css";
 import { Routes, Route } from "react-router-dom";
 import { Suspense } from "react";
 import { Header } from "./components/Header/Header";
@@ -12,7 +12,7 @@ import { MainEpisodesDetails } from "./components/MainComponents/MainEpisodesDet
 
 export const App = () => {
   return (
-    <>
+    <div className={styles.app}>
       <Header />
       <Routes>
         <Route path="/" element={<MainCharacters />} />
@@ -24,7 +24,7 @@ export const App = () => {
         <Route path="/episodes/:id" element={<MainEpisodesDetails />} />
       </Routes>
       <Footer />
-    </>
+    </div>
   );
 };
 

@@ -39,7 +39,7 @@ export const MainLocationDetails = () => {
         residentsId
       );
       // locationsState содержит коллекцию объектов с информацией о персонажах
-      await setLocationsState(responseCharactersDetailsCards);
+      setLocationsState(responseCharactersDetailsCards);
     } catch (error) {
       console.log(error);
     }

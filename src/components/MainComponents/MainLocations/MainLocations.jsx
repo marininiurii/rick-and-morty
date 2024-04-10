@@ -1,4 +1,3 @@
-import { TextField } from "@mui/material";
 import { BasicButton } from "../../primitivs/Button/Button";
 import { SelectField } from "../../primitivs/Select/Select";
 import styles from "./MainLocations.module.css";
@@ -9,9 +8,10 @@ import { data } from "./constants";
 import logoGeneral from "../../../assets/svg/rick-and-morty 1.svg";
 import { ModalFiltersButton } from "../../primitivs/ModalFiltersButton/ModalFiltersButton";
 import { responsePage } from "../../../api/ResponsePage";
+import { TextFieldComponent } from "../../primitivs/TextField/TextField";
 
 export const MainLocations = () => {
-  const PREVIEW_VALUE_STEP = 8;
+  const PREVIEW_VALUE_STEP = 12;
 
   const [filters, setFilters] = useState({ type: "", dimension: "" });
   const [renderLocations, setRenderLocations] = useState(PREVIEW_VALUE_STEP);
@@ -30,7 +30,7 @@ export const MainLocations = () => {
   };
   const handleClick = () => {
     if (renderLocations > locations.length) {
-      setPage((prev) => prev + 1)
+      setPage((prev) => prev + 1);
     }
     setRenderLocations((prev) => prev + PREVIEW_VALUE_STEP);
   };
@@ -39,7 +39,10 @@ export const MainLocations = () => {
     const path = "location";
     try {
       const response = await responsePage(path, page, searchText, filters);
-      setLocations((prevLocations) => [...prevLocations, ...response.data.results]);
+      setLocations((prevLocations) => [
+        ...prevLocations,
+        ...response.data.results,
+      ]);
     } catch (error) {
       console.log(error);
     }
@@ -59,18 +62,16 @@ export const MainLocations = () => {
           name={name}
           key={id}
         />
-      ))
+      ));
   };
 
   return (
     <main className={styles.main}>
       <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
       <div className={styles.filtersSection}>
-        <TextField
-          sx={{ minWidth: 312 }}
-          id="outlined-basic"
-          label="Filter by name"
-          variant="outlined"
+        <TextFieldComponent
+          sx={{ maxWidth: 326, width: "100%" }}
+          label={"Filter by name..."}
           onChange={handleInputChange}
         />
         <ModalFiltersButton className={styles.modalButton}>

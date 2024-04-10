@@ -1,43 +1,33 @@
-.main {
-    width: 100%;
+.main, .header, .logoSection, .goBackSection, .infoSection, .headerSection, .cardsSection {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
+.main {
+    width: 100%;
+    flex-direction: column;
+}
+
 .header {
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .logoSection {
     width: 30%;
     padding-right: 10%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
 }
 
 .goBackSection {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     text-align: center;
     width: 10%;
     height: 200px;
     padding-right: 10%;
 }
 
-
 .infoSection {
     width: 30%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .spanContainer {
@@ -50,33 +40,28 @@
 .spanHead {
     font-size: 16px;
     font-weight: 700;
-    color: #081F32;
+    color: var(--text-color);
 }
 
 .spanContent {
     font-size: 14px;
     font-weight: 400;
-    color: #6E798C;
+    color: var(--span-header-color);
     margin-top: 5px;
 }
 
 .headerSection {
     width: 40%;
-    display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     padding-right: 15%;
 }
 
 .cardsSection {
     width: 100%;
     margin-top: 30px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+    margin-bottom: 30px;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 20px;
 }
 
 .wrapEpisodesCardsContainer {
@@ -92,5 +77,5 @@
     margin-left: 10px;
     font-size: 20px;
     font-weight: 500;
-    color: #8E8E93;
+    color: var(--header-color);
 }

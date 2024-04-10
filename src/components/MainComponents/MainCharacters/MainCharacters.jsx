@@ -1,7 +1,6 @@
 import { SelectField } from "../../primitivs/Select/Select";
 import { CardCharacters } from "../../primitivs/CardCharacters/CardCharacters";
 import styles from "./MainCharacters.module.css";
-import TextField from "@mui/material/TextField";
 import { BasicButton } from "../../primitivs/Button/Button";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +8,7 @@ import { responsePage } from "../../../api/ResponsePage";
 import { data } from "./constants";
 import logoGeneral from "../../../assets/svg/logo-general.svg";
 import { ModalFiltersButton } from "../../primitivs/ModalFiltersButton/ModalFiltersButton";
+import { TextFieldComponent } from "../../primitivs/TextField/TextField";
 
 export const MainCharacters = () => {
   const PREVIEW_VALUE_STEP = 8;
@@ -44,7 +44,10 @@ export const MainCharacters = () => {
     const path = "character";
     try {
       const response = await responsePage(path, page, searchText, filters);
-      setCharacters((prevCharacters) => [...prevCharacters, ...response.data.results]);
+      setCharacters((prevCharacters) => [
+        ...prevCharacters,
+        ...response.data.results,
+      ]);
     } catch (error) {
       console.log(error);
     }
@@ -73,11 +76,9 @@ export const MainCharacters = () => {
     <main className={styles.main}>
       <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
       <div className={styles.filtersSection}>
-        <TextField
-          sx={{ minWidth: 312 }}
-          id="outlined-basic"
-          label="Filter by name"
-          variant="outlined"
+        <TextFieldComponent
+          sx={{ width: 240 }}
+          label={"Filter by name..."}
           onChange={handleInputChange}
         />
         <ModalFiltersButton className={styles.modalButton}>
