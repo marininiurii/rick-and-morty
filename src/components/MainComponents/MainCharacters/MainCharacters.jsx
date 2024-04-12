@@ -1,17 +1,18 @@
+import styles from "./MainCharacters.module.css";
+import logoGeneral from "../../../assets/svg/logo-general.svg";
+import { data } from "./constants";
 import { SelectField } from "../../primitivs/Select/Select";
 import { CardCharacters } from "../../primitivs/CardCharacters/CardCharacters";
-import styles from "./MainCharacters.module.css";
 import { BasicButton } from "../../primitivs/Button/Button";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { responsePage } from "../../../api/ResponsePage";
-import { data } from "./constants";
-import logoGeneral from "../../../assets/svg/logo-general.svg";
 import { ModalFiltersButton } from "../../primitivs/ModalFiltersButton/ModalFiltersButton";
 import { TextFieldComponent } from "../../primitivs/TextField/TextField";
 
 export const MainCharacters = () => {
   const PREVIEW_VALUE_STEP = 8;
+  const PAGE_VALUE_STEP = 1;
 
   const [filters, setFilters] = useState({
     type: "",
@@ -22,7 +23,7 @@ export const MainCharacters = () => {
   const [characters, setCharacters] = useState([]);
   const [renderCharacters, setRenderCharacters] = useState(PREVIEW_VALUE_STEP);
   const [searchText, setSearchText] = useState("");
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(PAGE_VALUE_STEP);
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
@@ -35,7 +36,7 @@ export const MainCharacters = () => {
   };
   const handleClick = () => {
     if (renderCharacters > characters.length) {
-      setPage((prev) => prev + 1);
+      setPage((prev) => prev + PAGE_VALUE_STEP);
     }
     setRenderCharacters((prev) => prev + PREVIEW_VALUE_STEP);
   };
@@ -72,6 +73,19 @@ export const MainCharacters = () => {
       ));
   };
 
+  const selectsNames = ["species", "gender", "status"];
+  const renderSelects = (className) =>
+    selectsNames.map((selectName, index) => (
+      <SelectField
+        className={className}
+        value={filters[selectName]}
+        name={selectName}
+        onChange={handleSelectChange}
+        data={data[index]}
+        key={selectName}
+      />
+    ));
+
   return (
     <main className={styles.main}>
       <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
@@ -84,47 +98,10 @@ export const MainCharacters = () => {
         <ModalFiltersButton className={styles.modalButton}>
           <div className={styles.modalFilters}>
             <span className={styles.spanModalSection}>Filters</span>
-            <SelectField
-              value={filters.species}
-              name="species"
-              onChange={handleSelectChange}
-              data={data[0]}
-            />
-            <SelectField
-              value={filters.gender}
-              name="gender"
-              onChange={handleSelectChange}
-              data={data[1]}
-            />
-            <SelectField
-              value={filters.status}
-              name="status"
-              onChange={handleSelectChange}
-              data={data[2]}
-            />
+            {renderSelects("")}
           </div>
         </ModalFiltersButton>
-        <SelectField
-          className={styles.select}
-          value={filters.species}
-          name="species"
-          onChange={handleSelectChange}
-          data={data[0]}
-        />
-        <SelectField
-          className={styles.select}
-          value={filters.gender}
-          name="gender"
-          onChange={handleSelectChange}
-          data={data[1]}
-        />
-        <SelectField
-          className={styles.select}
-          value={filters.status}
-          name="status"
-          onChange={handleSelectChange}
-          data={data[2]}
-        />
+        {renderSelects(styles.selects)}
       </div>
       <div className={styles.cardsSection}>{renderCardComponents()}</div>
       <div className={styles.buttonSection}>

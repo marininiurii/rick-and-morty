@@ -1,9 +1,9 @@
 import styles from "./MainCharactersDetails.module.css";
+import ArrowLink from "../../../assets/svg/arrow_forward.svg";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { LoadingComponent } from "../../primitivs/LoadingComponent/LoadingComponent";
 import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
-import ArrowLink from "../../../assets/svg/arrow_forward.svg";
 import { responseDetails } from "../../../api/ResponseDetails";
 
 export const MainCharactersDetails = () => {
@@ -44,6 +44,31 @@ export const MainCharactersDetails = () => {
     }
   }, [loading]);
 
+  const characterInformation = [
+    "gender",
+    "status",
+    "species",
+    "origin",
+    "type",
+  ];
+
+  const renderInformations = () => {
+    return characterInformation.map((information) => {
+      const informationToupperCase =
+        information.charAt(0).toUpperCase() + information.slice(1);
+      let value = characterDetails[information];
+      if (information === "origin") {
+        value = value["name"];
+      }
+      return (
+        <div key={information} className={styles.spanContainer}>
+          <span className={styles.spanEpisode}>{informationToupperCase}</span>
+          <span className={styles.spanName}>{value}</span>
+        </div>
+      );
+    });
+  };
+
   const renderEpisodes = () => {
     let data = episodeState;
     if (!Array.isArray(episodeState)) {
@@ -83,28 +108,7 @@ export const MainCharactersDetails = () => {
       <div className={styles.infoSection}>
         <div className={styles.informations}>
           <h3>Informations</h3>
-          <div className={styles.spanContainer}>
-            <span className={styles.spanEpisode}>Gender</span>
-            <span className={styles.spanName}>{characterDetails.gender}</span>
-          </div>
-          <div className={styles.spanContainer}>
-            <span className={styles.spanEpisode}>Status</span>
-            <span className={styles.spanName}>{characterDetails.status}</span>
-          </div>
-          <div className={styles.spanContainer}>
-            <span className={styles.spanEpisode}>Specie</span>
-            <span className={styles.spanName}>{characterDetails.species}</span>
-          </div>
-          <div className={styles.spanContainer}>
-            <span className={styles.spanEpisode}>Origin</span>
-            <span className={styles.spanName}>
-              {characterDetails.origin.name}
-            </span>
-          </div>
-          <div className={styles.spanContainer}>
-            <span className={styles.spanEpisode}>Type</span>
-            <span className={styles.spanName}>{characterDetails.type}</span>
-          </div>
+          {renderInformations()}
           <Link
             className={styles.link}
             to={`/locations/${

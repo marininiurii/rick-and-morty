@@ -10,11 +10,12 @@ import { TextFieldComponent } from "../../primitivs/TextField/TextField";
 
 export const MainEpisodes = () => {
   const PREVIEW_VALUE_STEP = 12;
+  const PAGE_VALUE_STEP = 1;
 
   const [episodes, setEpisodes] = useState([]);
   const [renderEpisodes, setRenderEpisodes] = useState(PREVIEW_VALUE_STEP);
   const [searchText, setSearchText] = useState("");
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(PAGE_VALUE_STEP);
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
@@ -23,7 +24,7 @@ export const MainEpisodes = () => {
   };
   const handleClick = () => {
     if (renderEpisodes > episodes.length) {
-      setPage((prev) => prev + 1);
+      setPage((prev) => prev + PAGE_VALUE_STEP);
     }
     setRenderEpisodes((prev) => prev + PREVIEW_VALUE_STEP);
   };
@@ -45,7 +46,7 @@ export const MainEpisodes = () => {
   useEffect(() => {
     getEpisodesPage();
   }, [page, searchText]);
-  console.log("episodes :>> ", episodes);
+
   const renderCardComponents = () => {
     return episodes
       .slice(0, renderEpisodes)
