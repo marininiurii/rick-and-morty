@@ -14,15 +14,17 @@ export const App = () => {
   return (
     <div className={styles.app}>
       <Header />
-      <Routes>
-        <Route path="/" element={<MainCharacters />} />
-        <Route path="/characters" element={<MainCharacters />} />
-        <Route path="/locations" element={<MainLocations />} />
-        <Route path="/episodes" element={<MainEpisodes />} />
-        <Route path="/characters/:id" element={<MainCharactersDetails />} />
-        <Route path="/locations/:id" element={<MainLocationDetails />} />
-        <Route path="/episodes/:id" element={<MainEpisodesDetails />} />
-      </Routes>
+      <main className={styles.body}>
+        <Routes>
+          <Route path="/" element={<MainCharacters />} />
+          <Route path="/characters" element={<MainCharacters />} />
+          <Route path="/locations" element={<MainLocations />} />
+          <Route path="/episodes" element={<MainEpisodes />} />
+          <Route path="/characters/:id" element={<MainCharactersDetails />} />
+          <Route path="/locations/:id" element={<MainLocationDetails />} />
+          <Route path="/episodes/:id" element={<MainEpisodesDetails />} />
+        </Routes>
+      </main>
       <Footer />
     </div>
   );

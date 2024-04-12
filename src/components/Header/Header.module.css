@@ -17,9 +17,9 @@
 }
 
 .links {
-    width: 20%;
+    width: 300px;
     display: flex;
-    gap: 30px;
+    gap: 24px;
     padding-right: 15%;
     align-items: center;
     justify-content: center;

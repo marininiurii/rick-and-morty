@@ -20,26 +20,44 @@ export const CardCharacters = ({
       status={status}
       id={id}
       sx={{
-        maxWidth: 240,
+        display: "flex",
+        flexDirection: "column",
+        width: 260,
+        height: 264,
         cursor: "pointer",
-        fontSize: 20,
         boxShadow:
           "0px 2px 4px 0px #00000024, 0px 3px 4px 0px #0000001F, 0px 1px 5px 0px #00000033",
       }}
     >
-      <CardActionArea>
+      <CardActionArea
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "stretch",
+        }}
+      >
         <CardMedia
+          sx={{ height: 0, paddingTop: "65%", objectFit: "cover" }}
           component="svg"
-          maxWidth="100%"
-          height="auto"
           image={image}
-          alt="Rick"
+          alt="character"
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography
+            gutterBottom
+            variant="h4"
+            component="div"
+            sx={{ fontSize: 26, weight: 500 }}
+          >
             {name}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            gutterBottom
+            variant="body2"
+            component="div"
+            color="text.secondary"
+            sx={{ fontSize: 18, weight: 400 }}
+          >
             {species}
           </Typography>
         </CardContent>
