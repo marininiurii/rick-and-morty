@@ -19,6 +19,7 @@
 .image {
     max-width: 300px;
     width: 100%;
+    height: 100%;
     border-radius: 50%;
     border: 5px solid var(--border-image);
 }
@@ -26,7 +27,7 @@
 h1 {
     font-size: 48px;
     font-weight: 400;
-    color: #081F32;
+    color: var(--text-color);
 }
 
 .logoSection {
@@ -42,6 +43,7 @@ h1 {
     width: 10%;
     height: 200px;
     padding-right: 5%;
+    cursor: pointer;
 }
 
 .arrow {
@@ -139,6 +141,22 @@ h3 {
 }
 
 @media (max-width: 720px) {
+    .arrow {
+        display: flex;
+        justify-content: center;
+    }
+
+    .goBackSection {
+        height: 100px;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
     .infoSection {
         width: 100%;
         display: flex;
