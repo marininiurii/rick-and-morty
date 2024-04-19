@@ -1,53 +1,48 @@
 import styles from "./MainEpisodes.module.css";
-import { BasicButton } from "../../primitivs/Button/Button";
-import { useState, useEffect } from "react";
-import { CardEpisodes } from "../../primitivs/CardEpisodes/CardEpisodes";
 import logoGeneral from "../../../assets/svg/rick-and-morty2 1.svg";
+import { BasicButton } from "../../primitivs/Button/Button";
+import { CardEpisodes } from "../../primitivs/CardEpisodes/CardEpisodes";
 import { useNavigate } from "react-router-dom";
-import { responsePage } from "../../../api/ResponsePage";
 import { TextFieldComponent } from "../../primitivs/TextField/TextField";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  renderCardsAction,
+  setPageAction,
+  setSearchTextAction,
+} from "../../../store/reducers/charactersPageReducer";
+import { useGetEpisodesQuery } from "../../../store/services/rickAndMortyApi";
 
 export const MainEpisodes = () => {
-  const PREVIEW_VALUE_STEP = 12;
-  const PAGE_VALUE_STEP = 1;
+  const dispatch = useDispatch();
 
-  const [episodes, setEpisodes] = useState([]);
-  const [renderEpisodes, setRenderEpisodes] = useState(PREVIEW_VALUE_STEP);
-  const [searchText, setSearchText] = useState("");
-  const [page, setPage] = useState(PAGE_VALUE_STEP);
+  const searchText = useSelector((state) => state.charactersPage.searchText);
+  const setSearchText = (payload) => dispatch(setSearchTextAction(payload));
+
+  const page = useSelector((state) => state.charactersPage.page);
+  const nextPageAction = () => dispatch(setPageAction());
+
+  const renderEpisodes = useSelector((state) => state.charactersPage.renderCards);
+  const setRenderEpisodes = () => dispatch(renderCardsAction());
+
+  const { data: dataEpisodes, isLoading } = useGetEpisodesQuery({ page, searchText });
+
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
-    setEpisodes([]);
     setSearchText(event.target.value);
   };
   const handleClick = () => {
-    if (renderEpisodes > episodes.length) {
-      setPage((prev) => prev + PAGE_VALUE_STEP);
+    if (renderEpisodes > dataEpisodes.results.length) {
+      nextPageAction();
     }
-    setRenderEpisodes((prev) => prev + PREVIEW_VALUE_STEP);
+    setRenderEpisodes();
   };
-
-  const getEpisodesPage = async () => {
-    const path = "episode";
-    const filters = {};
-    try {
-      const response = await responsePage(path, page, searchText, filters);
-      setEpisodes((prevEpisodes) => [
-        ...prevEpisodes,
-        ...response.data.results,
-      ]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getEpisodesPage();
-  }, [page, searchText]);
 
   const renderCardComponents = () => {
-    return episodes
+    if (isLoading) {
+      return null;
+    }
+    return dataEpisodes.results
       .slice(0, renderEpisodes)
       .map(({ name, air_date, episode, id }) => (
         <CardEpisodes
@@ -66,7 +61,7 @@ export const MainEpisodes = () => {
       <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
       <div className={styles.filtersSection}>
         <TextFieldComponent
-          sx={{ maxWidth: 500, width: "100%" }}
+          sx={{ maxWidth: 500, width: "100%", marginLeft: "10%", marginRight: "10%" }}
           label={"Filter by name or episode (ex. S01 or S01E02)"}
           onChange={handleInputChange}
         />

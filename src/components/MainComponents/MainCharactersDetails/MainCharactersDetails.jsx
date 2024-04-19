@@ -6,62 +6,61 @@ import { LoadingComponent } from "../../primitivs/LoadingComponent/LoadingCompon
 import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
 import { responseDetails } from "../../../api/ResponseDetails";
 import {
-  rickAndMortyApi,
   useGetCharactersQuery,
-  useGetEpisodesQuery,
+  useGetEpisodesPageQuery,
 } from "../../../store/services/rickAndMortyApi";
 import { useDispatch, useSelector } from "react-redux";
 import { setEpisodesAction } from "../../../store/reducers/charactersPageReducer";
 
 export const MainCharactersDetails = () => {
   const { id } = useParams();
-  const [characterDetails, setCharacterDetails] = useState({});
-  const [loading, setLoading] = useState(true);
+  // const [characterDetails, setCharacterDetails] = useState({});
+  // const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
 
   const episodes = useSelector((state) => state.charactersPage.episodes);
   const setEpisodes = (payload) => dispatch(setEpisodesAction(payload));
+  // const getCharacterDetails = async () => {
+  //   const path = "character";
+  //   try {
+  //     const response = await responseDetails(path, id);
+  //     setCharacterDetails(response);
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  const getCharacterDetails = async () => {
-    const path = "character";
-    try {
-      const response = await responseDetails(path, id);
-      setCharacterDetails(response);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // В хуке useGetCharactersQuery получаю данные characterDetails но дальше
+  // В хуке useGetCharactersQuery гипотетически :) получаю данные characterDetails но дальше
   // все стопорится потому что в RTK Query нет возможности обращаться к апи с множеством запросов
   // то есть у меня приходит episodesPage это массив с номерами страниц и я не понимаю как мне
   // сделать запрос к апи с этими номерами страниц через хук useGetEpisodesQuery так как он
   // принимает один параметр
-  // const { data: characterDetails } = useGetCharactersQuery({ id });
-  // const { data: episodeState } = useGetEpisodesQuery({ episodesPage });
+  const { data: characterDetails } = useGetCharactersQuery({ id }); // в консоле приходит undefined НЕ ПОНИМАЮ
+  const episodesPages = characterDetails.episode.map((url) => url.split("/").slice(-1)[0]);
+  const { data: episodeState } = useGetEpisodesPageQuery({ ...episodesPages });
+  setEpisodes(episodeState.results);
+  // const getEpisodePage = async () => {
+  //   const path = "episode";
+  //   try {
+  //     const episodesPages = await characterDetails.episode.map(
+  //       (url) => url.split("/").slice(-1)[0]
+  //     );
+  //     const responsePages = await responseDetails(path, episodesPages);
+  //     setEpisodes(responsePages);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  const getEpisodePage = async () => {
-    const path = "episode";
-    try {
-      const episodesPages = await characterDetails.episode.map(
-        (url) => url.split("/").slice(-1)[0]
-      );
-      const responsePages = await responseDetails(path, episodesPages);
-      setEpisodes(responsePages);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getCharacterDetails();
-    if (!loading) {
-      getEpisodePage();
-    }
-  }, [loading]);
+  // useEffect(() => {
+  //   getCharacterDetails();
+  //   if (!loading) {
+  //     getEpisodePage();
+  //   }
+  // }, [loading]);
 
   const characterInformation = ["gender", "status", "species", "origin", "type"];
 
@@ -98,7 +97,7 @@ export const MainCharactersDetails = () => {
     ));
   };
 
-  return !loading ? (
+  return (
     <div className={styles.main}>
       <div className={styles.headSection}>
         <div className={styles.goBackSection}>
@@ -130,7 +129,5 @@ export const MainCharactersDetails = () => {
         </div>
       </div>
     </div>
-  ) : (
-    <LoadingComponent />
   );
 };

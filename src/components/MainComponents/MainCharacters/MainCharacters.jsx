@@ -31,7 +31,7 @@ export const MainCharacters = () => {
   const page = useSelector((state) => state.charactersPage.page);
   const nextPageAction = () => dispatch(setPageAction());
 
-  const { data: dataCharacters } = useGetCharactersQuery({ page, searchText, filters });
+  const { data: dataCharacters, isLoading } = useGetCharactersQuery({ page, searchText, filters });
 
   const navigate = useNavigate();
 
@@ -48,7 +48,7 @@ export const MainCharacters = () => {
     setRenderCharacters();
   };
   const renderCardComponents = () => {
-    if (!dataCharacters) {
+    if (isLoading) {
       return null;
     }
     return dataCharacters.results.slice(0, renderCharacters).map(({ image, name, species, id }) => {

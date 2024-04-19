@@ -5,9 +5,8 @@ import FormControl from "@mui/material/FormControl";
 
 export const TextFieldComponent = ({ onChange, label, sx }) => {
   return (
-    <FormControl>
+    <FormControl sx={sx}>
       <TextField
-        sx={sx}
         id="outlined-basic"
         label={label}
         variant="outlined"

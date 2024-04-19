@@ -3,58 +3,55 @@ import logoGeneral from "../../../assets/svg/rick-and-morty 1.svg";
 import { data } from "./constants";
 import { BasicButton } from "../../primitivs/Button/Button";
 import { SelectField } from "../../primitivs/Select/Select";
-import { useEffect, useState } from "react";
 import { CardLocations } from "../../primitivs/CardLocations/CardLocations";
 import { useNavigate } from "react-router-dom";
 import { ModalFiltersButton } from "../../primitivs/ModalFiltersButton/ModalFiltersButton";
-import { responsePage } from "../../../api/ResponsePage";
 import { TextFieldComponent } from "../../primitivs/TextField/TextField";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  renderCardsAction,
+  setFiltersAction,
+  setPageAction,
+  setSearchTextAction,
+} from "../../../store/reducers/charactersPageReducer";
+import { useGetLocationsQuery } from "../../../store/services/rickAndMortyApi";
 
 export const MainLocations = () => {
-  const PREVIEW_VALUE_STEP = 12;
-  const PAGE_VALUE_STEP = 1;
+  const dispatch = useDispatch();
 
-  const [filters, setFilters] = useState({ type: "", dimension: "" });
-  const [renderLocations, setRenderLocations] = useState(PREVIEW_VALUE_STEP);
-  const [locations, setLocations] = useState([]);
-  const [searchText, setSearchText] = useState("");
-  const [page, setPage] = useState(PAGE_VALUE_STEP);
+  const filters = useSelector((state) => state.charactersPage.filters);
+  const setFilters = (payload) => dispatch(setFiltersAction(payload));
+
+  const renderLocations = useSelector((state) => state.charactersPage.renderCards);
+  const setRenderLocations = () => dispatch(renderCardsAction());
+
+  const searchText = useSelector((state) => state.charactersPage.searchText);
+  const setSearchText = (payload) => dispatch(setSearchTextAction(payload));
+
+  const page = useSelector((state) => state.charactersPage.page);
+  const nextPageAction = () => dispatch(setPageAction());
+
+  const { data: dataLocations, isLoading } = useGetLocationsQuery({ page, searchText, filters });
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
-    setLocations([]);
     setSearchText(event.target.value);
   };
   const handleSelectChange = (event) => {
-    setLocations([]);
     setFilters({ ...filters, [event.target.name]: event.target.value });
   };
   const handleClick = () => {
-    if (renderLocations > locations.length) {
-      setPage((prev) => prev + PAGE_VALUE_STEP);
+    if (renderLocations > dataLocations.results.length) {
+      nextPageAction();
     }
-    setRenderLocations((prev) => prev + PREVIEW_VALUE_STEP);
+    setRenderLocations();
   };
-
-  const getLocationsPage = async () => {
-    const path = "location";
-    try {
-      const response = await responsePage(path, page, searchText, filters);
-      setLocations((prevLocations) => [
-        ...prevLocations,
-        ...response.data.results,
-      ]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getLocationsPage();
-  }, [page, searchText, filters]);
 
   const renderCardComponents = () => {
-    return locations
+    if (isLoading) {
+      return null;
+    }
+    return dataLocations.results
       .slice(0, renderLocations)
       .map(({ type, name, id }) => (
         <CardLocations
