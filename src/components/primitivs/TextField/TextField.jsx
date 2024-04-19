@@ -3,10 +3,11 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 
-export const TextFieldComponent = ({ onChange, label }) => {
+export const TextFieldComponent = ({ onChange, label, sx }) => {
   return (
     <FormControl>
       <TextField
+        sx={sx}
         id="outlined-basic"
         label={label}
         variant="outlined"

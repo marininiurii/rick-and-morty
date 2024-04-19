@@ -1,5 +1,4 @@
 import styles from "./MainEpisodes.module.css";
-import TextField from "@mui/material/TextField";
 import { BasicButton } from "../../primitivs/Button/Button";
 import { useState, useEffect } from "react";
 import { CardEpisodes } from "../../primitivs/CardEpisodes/CardEpisodes";
@@ -67,7 +66,7 @@ export const MainEpisodes = () => {
       <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
       <div className={styles.filtersSection}>
         <TextFieldComponent
-          sx={{ maxWidth: 500, width: "100%", margin: "0 5% 0 5%" }}
+          sx={{ maxWidth: 500, width: "100%" }}
           label={"Filter by name or episode (ex. S01 or S01E02)"}
           onChange={handleInputChange}
         />

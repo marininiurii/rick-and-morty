@@ -1,76 +1,66 @@
 import styles from "./MainCharacters.module.css";
 import logoGeneral from "../../../assets/svg/logo-general.svg";
-import { data } from "./constants";
+import { dataSelects } from "./constants";
 import { SelectField } from "../../primitivs/Select/Select";
 import { CardCharacters } from "../../primitivs/CardCharacters/CardCharacters";
 import { BasicButton } from "../../primitivs/Button/Button";
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { responsePage } from "../../../api/ResponsePage";
 import { ModalFiltersButton } from "../../primitivs/ModalFiltersButton/ModalFiltersButton";
 import { TextFieldComponent } from "../../primitivs/TextField/TextField";
+import { useDispatch, useSelector } from "react-redux";
+import { useGetCharactersQuery } from "../../../store/services/rickAndMortyApi";
+import {
+  renderCharactersAction,
+  setFiltersAction,
+  setPageAction,
+  setSearchTextAction,
+} from "../../../store/reducers/charactersPageReducer";
 
 export const MainCharacters = () => {
-  const PREVIEW_VALUE_STEP = 8;
-  const PAGE_VALUE_STEP = 1;
+  const dispatch = useDispatch();
 
-  const [filters, setFilters] = useState({
-    type: "",
-    status: "",
-    species: "",
-    gender: "",
-  });
-  const [characters, setCharacters] = useState([]);
-  const [renderCharacters, setRenderCharacters] = useState(PREVIEW_VALUE_STEP);
-  const [searchText, setSearchText] = useState("");
-  const [page, setPage] = useState(PAGE_VALUE_STEP);
+  const filters = useSelector((state) => state.charactersPage.filters);
+  const setFilters = (payload) => dispatch(setFiltersAction(payload));
+
+  const renderCharacters = useSelector((state) => state.charactersPage.renderCharacters);
+  const setRenderCharacters = () => dispatch(renderCharactersAction());
+
+  const searchText = useSelector((state) => state.charactersPage.searchText);
+  const setSearchText = (payload) => dispatch(setSearchTextAction(payload));
+
+  const page = useSelector((state) => state.charactersPage.page);
+  const nextPageAction = () => dispatch(setPageAction());
+
+  const { data: dataCharacters } = useGetCharactersQuery({ page, searchText, filters });
+
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
-    setCharacters([]);
     setSearchText(event.target.value);
   };
   const handleSelectChange = (event) => {
-    setCharacters([]);
     setFilters({ ...filters, [event.target.name]: event.target.value });
   };
   const handleClick = () => {
-    if (renderCharacters > characters.length) {
-      setPage((prev) => prev + PAGE_VALUE_STEP);
+    if (renderCharacters > dataCharacters.results.length) {
+      nextPageAction();
     }
-    setRenderCharacters((prev) => prev + PREVIEW_VALUE_STEP);
+    setRenderCharacters();
   };
-
-  const getCharactersPage = async () => {
-    const path = "character";
-    try {
-      const response = await responsePage(path, page, searchText, filters);
-      setCharacters((prevCharacters) => [
-        ...prevCharacters,
-        ...response.data.results,
-      ]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getCharactersPage();
-  }, [page, searchText, filters]);
-
   const renderCardComponents = () => {
-    return characters
-      .slice(0, renderCharacters)
-      .map(({ image, name, species, id }) => (
-        <CardCharacters
-          onClick={() => navigate(`/characters/${id}`)}
-          className={styles.card}
-          image={image}
-          name={name}
-          species={species}
-          key={id}
-        />
-      ));
+    if (!dataCharacters) {
+      return null;
+    }
+    return dataCharacters.results.slice(0, renderCharacters).map(({ image, name, species, id }) => {
+      const props = {
+        onClick: () => navigate(`/characters/${id}`),
+        image: image,
+        name: name,
+        species: species,
+        key: id,
+      };
+      return <CardCharacters {...props} />;
+    });
   };
 
   const selectsNames = ["species", "gender", "status"];
@@ -81,7 +71,7 @@ export const MainCharacters = () => {
         value={filters[selectName]}
         name={selectName}
         onChange={handleSelectChange}
-        data={data[index]}
+        data={dataSelects[index]}
         key={selectName}
       />
     ));

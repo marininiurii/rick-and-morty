@@ -5,7 +5,6 @@ import { NavigateTabButton } from "../primitivs/NavigateTabButton/NavigateTabBut
 
 export const Header = () => {
   const pathForLinks = ["characters", "locations", "episodes"];
-
   const renderLinks = pathForLinks.map((path) => (
     <NavigateTabButton path={path} key={path} />
   ));
