@@ -1,10 +1,7 @@
 import styles from "./MainCharactersDetails.module.css";
 import ArrowLink from "../../../assets/svg/arrow_forward.svg";
-import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { LoadingComponent } from "../../primitivs/LoadingComponent/LoadingComponent";
 import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
-import { responseDetails } from "../../../api/ResponseDetails";
 import {
   useGetCharactersQuery,
   useGetEpisodesPageQuery,
@@ -14,53 +11,24 @@ import { setEpisodesAction } from "../../../store/reducers/charactersPageReducer
 
 export const MainCharactersDetails = () => {
   const { id } = useParams();
-  // const [characterDetails, setCharacterDetails] = useState({});
-  // const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
 
   const episodes = useSelector((state) => state.charactersPage.episodes);
   const setEpisodes = (payload) => dispatch(setEpisodesAction(payload));
-  // const getCharacterDetails = async () => {
-  //   const path = "character";
-  //   try {
-  //     const response = await responseDetails(path, id);
-  //     setCharacterDetails(response);
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
-  // В хуке useGetCharactersQuery гипотетически :) получаю данные characterDetails но дальше
-  // все стопорится потому что в RTK Query нет возможности обращаться к апи с множеством запросов
-  // то есть у меня приходит episodesPage это массив с номерами страниц и я не понимаю как мне
-  // сделать запрос к апи с этими номерами страниц через хук useGetEpisodesQuery так как он
-  // принимает один параметр
-  const { data: characterDetails } = useGetCharactersQuery({ id }); // в консоле приходит undefined НЕ ПОНИМАЮ
-  const episodesPages = characterDetails.episode.map((url) => url.split("/").slice(-1)[0]);
+  const { data: characterDetails, isLoading } = useGetCharactersQuery({ id });
+
+  let episodesPages = [];
+  if (characterDetails) {
+    episodesPages = characterDetails.episode.map((url) => url.split("/").slice(-1)[0]);
+  }
+
   const { data: episodeState } = useGetEpisodesPageQuery({ ...episodesPages });
-  setEpisodes(episodeState.results);
-  // const getEpisodePage = async () => {
-  //   const path = "episode";
-  //   try {
-  //     const episodesPages = await characterDetails.episode.map(
-  //       (url) => url.split("/").slice(-1)[0]
-  //     );
-  //     const responsePages = await responseDetails(path, episodesPages);
-  //     setEpisodes(responsePages);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
-  // useEffect(() => {
-  //   getCharacterDetails();
-  //   if (!loading) {
-  //     getEpisodePage();
-  //   }
-  // }, [loading]);
+  if (episodeState) {
+    setEpisodes(episodeState.results);
+  }
 
   const characterInformation = ["gender", "status", "species", "origin", "type"];
 
@@ -96,38 +64,41 @@ export const MainCharactersDetails = () => {
       </Link>
     ));
   };
-
-  return (
-    <div className={styles.main}>
-      <div className={styles.headSection}>
-        <div className={styles.goBackSection}>
-          <ArrowGoBack className={styles.arrow} href={"/characters"} />
+  if (!isLoading) {
+    return (
+      <div className={styles.main}>
+        <div className={styles.headSection}>
+          <div className={styles.goBackSection}>
+            <ArrowGoBack className={styles.arrow} href={"/characters"} />
+          </div>
+          <div className={styles.logoSection}>
+            <img className={styles.image} src={characterDetails.image} alt="Логотип" />
+            <h1>{characterDetails.name}</h1>
+          </div>
         </div>
-        <div className={styles.logoSection}>
-          <img className={styles.image} src={characterDetails.image} alt="Логотип" />
-          <h1>{characterDetails.name}</h1>
+        <div className={styles.infoSection}>
+          <div className={styles.informations}>
+            <h3>Informations</h3>
+            {renderInformations()}
+            <Link
+              className={styles.link}
+              to={`/locations/${characterDetails.location.url.split("/").slice(-1)[0]}`}
+            >
+              <div className={styles.spanContainer}>
+                <span className={styles.spanEpisode}>Location</span>
+                <span className={styles.spanName}>{characterDetails.location.name}</span>
+                <img className={styles.imageArrowLink} src={ArrowLink} alt="Стрелка" />
+              </div>
+            </Link>
+          </div>
+          <div className={styles.episodes}>
+            <h3>Episodes</h3>
+            {renderEpisodes()}
+          </div>
         </div>
       </div>
-      <div className={styles.infoSection}>
-        <div className={styles.informations}>
-          <h3>Informations</h3>
-          {renderInformations()}
-          <Link
-            className={styles.link}
-            to={`/locations/${characterDetails.location.url.split("/").slice(-1)[0]}`}
-          >
-            <div className={styles.spanContainer}>
-              <span className={styles.spanEpisode}>Location</span>
-              <span className={styles.spanName}>{characterDetails.location.name}</span>
-              <img className={styles.imageArrowLink} src={ArrowLink} alt="Стрелка" />
-            </div>
-          </Link>
-        </div>
-        <div className={styles.episodes}>
-          <h3>Episodes</h3>
-          {renderEpisodes()}
-        </div>
-      </div>
-    </div>
-  );
+    );
+  } else {
+    return null;
+  }
 };
