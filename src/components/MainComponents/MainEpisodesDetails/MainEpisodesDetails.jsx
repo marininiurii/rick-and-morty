@@ -1,52 +1,39 @@
-import { useEffect, useState } from "react";
-import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
 import styles from "./MainEpisodesDetails.module.css";
+import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
 import { useNavigate, useParams } from "react-router-dom";
 import { CardCharacters } from "../../primitivs/CardCharacters/CardCharacters";
-import { responseDetails } from "../../../api/ResponseDetails";
+import { useDispatch, useSelector } from "react-redux";
+import { setEpisodesAction } from "../../../store/reducers/charactersPageReducer";
+import { LoadingComponent } from "../../primitivs/LoadingComponent/LoadingComponent";
+import { useEffect } from "react";
+import {
+  useGetCharactersQuery,
+  useGetEpisodesQuery,
+} from "../../../store/services/rickAndMortyApi";
 
 export const MainEpisodesDetails = () => {
-  const [episodeDetails, setEpisodeDetails] = useState({}); // объект с информацией об эпизоде
-  const [episodeCharacters, setEpisodeCharacters] = useState([]); // массив объектов с информацией о персах
-  const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const getEpisodeDetails = async () => {
-    const path = "episode";
-    try {
-      const response = await responseDetails(path, id);
-      await setEpisodeDetails(response); // episodeDetails детали конкретного эпизода.
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const episodes = useSelector((state) => state.charactersPage.episodes);
+  const setEpisodes = (payload) => dispatch(setEpisodesAction(payload));
 
-  const getEpisodesCharacters = async () => {
-    const path = "character";
-    try {
-      const charactersId = await episodeDetails.characters.map(
-        (url) => url.split("/").slice(-1)[0]
-      );
-      const responseCharactersEpisodesCards = await responseDetails(
-        path,
-        charactersId
-      );
-      await setEpisodeCharacters(responseCharactersEpisodesCards);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { data: episodeDetails, isLoading } = useGetEpisodesQuery({ id });
 
+  let charactersId = [];
+  if (episodeDetails) {
+    charactersId = episodeDetails.characters.map((url) => url.split("/").slice(-1)[0]);
+  }
+  const { data: episodeState } = useGetCharactersQuery({ ...charactersId });
   useEffect(() => {
-    getEpisodeDetails();
-    getEpisodesCharacters();
-  }, [loading]);
+    if (episodeState) {
+      setEpisodes(episodeState.results);
+    }
+  }, [episodeState]);
 
   const renderCharactersEpisode = () => {
-    return episodeCharacters.map(({ image, name, species, id }) => {
+    return episodes.map(({ image, name, species, id }) => {
       return (
         <CardCharacters
           onClick={() => navigate(`/characters/${id}`)}
@@ -60,6 +47,9 @@ export const MainEpisodesDetails = () => {
     });
   };
 
+  if (isLoading) {
+    return <LoadingComponent />;
+  }
   return (
     <div className={styles.main}>
       <header className={styles.header}>
@@ -71,15 +61,11 @@ export const MainEpisodesDetails = () => {
           <div className={styles.infoSection}>
             <div className={styles.spanContainer}>
               <span className={styles.spanHead}>Episode</span>
-              <span className={styles.spanContent}>
-                {episodeDetails.episode}
-              </span>
+              <span className={styles.spanContent}>{episodeDetails.episode}</span>
             </div>
             <div className={styles.spanContainer}>
               <span className={styles.spanHead}>Date</span>
-              <span className={styles.spanContent}>
-                {episodeDetails.air_date}
-              </span>
+              <span className={styles.spanContent}>{episodeDetails.air_date}</span>
             </div>
           </div>
         </div>

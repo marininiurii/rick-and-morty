@@ -1,66 +1,49 @@
+import styles from "./MainLocationDetails.module.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
-import styles from "./MainLocationDetails.module.css";
-import { useEffect, useState } from "react";
 import { CardCharacters } from "../../primitivs/CardCharacters/CardCharacters";
-import { responseDetails } from "../../../api/ResponseDetails";
+import { useDispatch, useSelector } from "react-redux";
+import { setLocationsAction } from "../../../store/reducers/charactersPageReducer";
+import { LoadingComponent } from "../../primitivs/LoadingComponent/LoadingComponent";
+import { useEffect } from "react";
+import {
+  useGetCharactersQuery,
+  useGetLocationsQuery,
+} from "../../../store/services/rickAndMortyApi";
 
 export const MainLocationDetails = () => {
   const { id } = useParams();
-  const [locationDetails, setLocationDetails] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [locationsState, setLocationsState] = useState([]);
+
   const navigate = useNavigate();
 
-  const getLocationDetails = async () => {
-    const path = "location";
-    try {
-      const response = await responseDetails(path, id);
-      // locationDetails детали конкретной локации. Приходит объект локации с именем датой и тд
-      await setLocationDetails(response);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const dispatch = useDispatch();
 
-  const getLocationCharacters = async () => {
-    const path = "character";
-    try {
-      if (locationDetails.residents.length === 0) return;
-      // if (!Array.isArray(locationDetails.residents)) return
+  const locations = useSelector((state) => state.charactersPage.locations);
+  const setLocations = (payload) => dispatch(setLocationsAction(payload));
 
-      const residentsId = await locationDetails.residents.map(
-        (url) => url.split("/").slice(-1)[0]
-      );
-      const responseCharactersDetailsCards = await responseDetails(
-        path,
-        residentsId
-      );
-      // locationsState содержит коллекцию объектов с информацией о персонажах
-      setLocationsState(responseCharactersDetailsCards);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { data: locationDetails, isLoading } = useGetLocationsQuery({ id });
+
+  let residentsId = [];
+  if (locationDetails) {
+    residentsId = locationDetails.residents.map((url) => url.split("/").slice(-1)[0]);
+  }
+
+  const { data: characterDetails } = useGetCharactersQuery({ ...residentsId });
 
   useEffect(() => {
-    getLocationDetails();
-    if (!loading) {
-      getLocationCharacters();
+    if (characterDetails) {
+      setLocations(characterDetails.results);
     }
-  }, [loading]);
+  }, [characterDetails]);
 
   const renderCharactersLocation = () => {
-    if (locationsState.length === 0) {
+    if (locations.length === 0) {
       return <div className={styles.noResidentsContainer}>No Residents</div>;
     }
-    let data = locationsState;
-    if (!Array.isArray(locationsState)) {
-      data = [locationsState];
+    let data = locations;
+    if (!Array.isArray(locations)) {
+      data = [locations];
     }
-
     return data.map(({ image, name, species, id }) => {
       return (
         <CardCharacters
@@ -75,6 +58,9 @@ export const MainLocationDetails = () => {
     });
   };
 
+  if (isLoading) {
+    return <LoadingComponent />;
+  }
   return (
     <div className={styles.main}>
       <header className={styles.header}>
@@ -90,9 +76,7 @@ export const MainLocationDetails = () => {
             </div>
             <div className={styles.spanContainer}>
               <span className={styles.spanHead}>Dimension</span>
-              <span className={styles.spanContent}>
-                {locationDetails.dimension}
-              </span>
+              <span className={styles.spanContent}>{locationDetails.dimension}</span>
             </div>
           </div>
         </div>

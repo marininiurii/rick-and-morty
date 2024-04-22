@@ -50,17 +50,7 @@ export const rickAndMortyApi = createApi({
         return `episode?page=${page}&name=${searchText}`;
       },
     }),
-    getEpisodesPage: builder.query({
-      query: ({ page }) => {
-        return `episode/?page=${page}`;
-      },
-    }),
   }),
 });
 
-export const {
-  useGetCharactersQuery,
-  useGetLocationsQuery,
-  useGetEpisodesQuery,
-  useGetEpisodesPageQuery,
-} = rickAndMortyApi;
+export const { useGetCharactersQuery, useGetLocationsQuery, useGetEpisodesQuery } = rickAndMortyApi;

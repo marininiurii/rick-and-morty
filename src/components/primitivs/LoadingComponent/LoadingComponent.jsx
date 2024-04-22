@@ -11,6 +11,7 @@ export const LoadingComponent = () => {
         alignItems: "center",
         width: "100%",
         height: "auto",
+        paddingTop: "15%",
       }}
     >
       <CircularProgress />

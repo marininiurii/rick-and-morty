@@ -5,12 +5,12 @@ import { CardEpisodes } from "../../primitivs/CardEpisodes/CardEpisodes";
 import { useNavigate } from "react-router-dom";
 import { TextFieldComponent } from "../../primitivs/TextField/TextField";
 import { useDispatch, useSelector } from "react-redux";
+import { useGetEpisodesQuery } from "../../../store/services/rickAndMortyApi";
 import {
   renderCardsAction,
   setPageAction,
   setSearchTextAction,
 } from "../../../store/reducers/charactersPageReducer";
-import { useGetEpisodesQuery } from "../../../store/services/rickAndMortyApi";
 
 export const MainEpisodes = () => {
   const dispatch = useDispatch();

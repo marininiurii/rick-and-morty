@@ -8,13 +8,13 @@ import { useNavigate } from "react-router-dom";
 import { ModalFiltersButton } from "../../primitivs/ModalFiltersButton/ModalFiltersButton";
 import { TextFieldComponent } from "../../primitivs/TextField/TextField";
 import { useDispatch, useSelector } from "react-redux";
+import { useGetLocationsQuery } from "../../../store/services/rickAndMortyApi";
 import {
   renderCardsAction,
   setFiltersAction,
   setPageAction,
   setSearchTextAction,
 } from "../../../store/reducers/charactersPageReducer";
-import { useGetLocationsQuery } from "../../../store/services/rickAndMortyApi";
 
 export const MainLocations = () => {
   const dispatch = useDispatch();

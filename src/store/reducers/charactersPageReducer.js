@@ -20,6 +20,7 @@ const RENDER_CHARACTERS = "RENDER_CHARACTERS";
 const PREVIEW_VALUE_CHARACTERS_STEP = 8;
 const SET_FILTERS = "SET_FILTERS";
 const EPISODES = "EPISODES";
+const LOCATIONS = "LOCATIONS";
 const RENDER_CARDS = "RENDER_CARDS";
 const PREVIEW_VALUE_CARDS_STEP = 12;
 
@@ -50,6 +51,11 @@ export const charactersPageReducer = (state = defaultState, action) => {
         ...state,
         episodes: action.payload,
       };
+    case LOCATIONS:
+      return {
+        ...state,
+        locations: action.payload,
+      };
     case RENDER_CARDS:
       return {
         ...state,
@@ -60,6 +66,7 @@ export const charactersPageReducer = (state = defaultState, action) => {
   }
 };
 
+export const setLocationsAction = (payload) => ({ type: LOCATIONS, payload });
 export const renderCardsAction = () => ({ type: RENDER_CARDS });
 export const setEpisodesAction = (payload) => ({ type: EPISODES, payload });
 export const setFiltersAction = (payload) => ({ type: SET_FILTERS, payload });

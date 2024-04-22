@@ -5,9 +5,12 @@ import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
 import {
   useGetCharactersQuery,
   useGetEpisodesPageQuery,
+  useGetEpisodesQuery,
 } from "../../../store/services/rickAndMortyApi";
 import { useDispatch, useSelector } from "react-redux";
 import { setEpisodesAction } from "../../../store/reducers/charactersPageReducer";
+import { LoadingComponent } from "../../primitivs/LoadingComponent/LoadingComponent";
+import { useEffect } from "react";
 
 export const MainCharactersDetails = () => {
   const { id } = useParams();
@@ -24,12 +27,13 @@ export const MainCharactersDetails = () => {
     episodesPages = characterDetails.episode.map((url) => url.split("/").slice(-1)[0]);
   }
 
-  const { data: episodeState } = useGetEpisodesPageQuery({ ...episodesPages });
+  const { data: episodeState } = useGetEpisodesQuery({ ...episodesPages });
 
-  if (episodeState) {
-    setEpisodes(episodeState.results);
-  }
-
+  useEffect(() => {
+    if (episodeState) {
+      setEpisodes(episodeState.results);
+    }
+  }, [episodeState]);
   const characterInformation = ["gender", "status", "species", "origin", "type"];
 
   const renderInformations = () => {
@@ -64,41 +68,41 @@ export const MainCharactersDetails = () => {
       </Link>
     ));
   };
-  if (!isLoading) {
-    return (
-      <div className={styles.main}>
-        <div className={styles.headSection}>
-          <div className={styles.goBackSection}>
-            <ArrowGoBack className={styles.arrow} href={"/characters"} />
-          </div>
-          <div className={styles.logoSection}>
-            <img className={styles.image} src={characterDetails.image} alt="Логотип" />
-            <h1>{characterDetails.name}</h1>
-          </div>
+
+  if (isLoading) {
+    return <LoadingComponent />;
+  }
+  return (
+    <div className={styles.main}>
+      <div className={styles.headSection}>
+        <div className={styles.goBackSection}>
+          <ArrowGoBack className={styles.arrow} href={"/characters"} />
         </div>
-        <div className={styles.infoSection}>
-          <div className={styles.informations}>
-            <h3>Informations</h3>
-            {renderInformations()}
-            <Link
-              className={styles.link}
-              to={`/locations/${characterDetails.location.url.split("/").slice(-1)[0]}`}
-            >
-              <div className={styles.spanContainer}>
-                <span className={styles.spanEpisode}>Location</span>
-                <span className={styles.spanName}>{characterDetails.location.name}</span>
-                <img className={styles.imageArrowLink} src={ArrowLink} alt="Стрелка" />
-              </div>
-            </Link>
-          </div>
-          <div className={styles.episodes}>
-            <h3>Episodes</h3>
-            {renderEpisodes()}
-          </div>
+        <div className={styles.logoSection}>
+          <img className={styles.image} src={characterDetails.image} alt="Логотип" />
+          <h1>{characterDetails.name}</h1>
         </div>
       </div>
-    );
-  } else {
-    return null;
-  }
+      <div className={styles.infoSection}>
+        <div className={styles.informations}>
+          <h3>Informations</h3>
+          {renderInformations()}
+          <Link
+            className={styles.link}
+            to={`/locations/${characterDetails.location.url.split("/").slice(-1)[0]}`}
+          >
+            <div className={styles.spanContainer}>
+              <span className={styles.spanEpisode}>Location</span>
+              <span className={styles.spanName}>{characterDetails.location.name}</span>
+              <img className={styles.imageArrowLink} src={ArrowLink} alt="Стрелка" />
+            </div>
+          </Link>
+        </div>
+        <div className={styles.episodes}>
+          <h3>Episodes</h3>
+          {renderEpisodes()}
+        </div>
+      </div>
+    </div>
+  );
 };
