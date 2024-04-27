@@ -6,36 +6,31 @@ import { useNavigate } from "react-router-dom";
 import { TextFieldComponent } from "../../primitivs/TextField/TextField";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetEpisodesQuery } from "../../../store/services/rickAndMortyApi";
-import {
-  renderCardsAction,
-  setPageAction,
-  setSearchTextAction,
-} from "../../../store/reducers/charactersPageReducer";
+import { Slice } from "../../../store/reducers/charactersPageReducer";
 
 export const MainEpisodes = () => {
   const dispatch = useDispatch();
 
-  const searchText = useSelector((state) => state.charactersPage.searchText);
-  const setSearchText = (payload) => dispatch(setSearchTextAction(payload));
+  const { searchText, page, renderCards } = useSelector(
+    (state) => state.charactersPage
+  );
+  const { setSearchText, setPage, setRenderCards } = Slice.actions;
 
-  const page = useSelector((state) => state.charactersPage.page);
-  const nextPageAction = () => dispatch(setPageAction());
-
-  const renderEpisodes = useSelector((state) => state.charactersPage.renderCards);
-  const setRenderEpisodes = () => dispatch(renderCardsAction());
-
-  const { data: dataEpisodes, isLoading } = useGetEpisodesQuery({ page, searchText });
+  const { data: dataEpisodes, isLoading } = useGetEpisodesQuery({
+    page,
+    searchText,
+  });
 
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
-    setSearchText(event.target.value);
+    dispatch(setSearchText(event.target.value));
   };
   const handleClick = () => {
-    if (renderEpisodes > dataEpisodes.results.length) {
-      nextPageAction();
+    if (renderCards > dataEpisodes.results.length) {
+      dispatch(setPage());
     }
-    setRenderEpisodes();
+    dispatch(setRenderCards());
   };
 
   const renderCardComponents = () => {
@@ -43,7 +38,7 @@ export const MainEpisodes = () => {
       return null;
     }
     return dataEpisodes.results
-      .slice(0, renderEpisodes)
+      .slice(0, renderCards)
       .map(({ name, air_date, episode, id }) => (
         <CardEpisodes
           onClick={() => navigate(`/episodes/${id}`)}
@@ -61,7 +56,12 @@ export const MainEpisodes = () => {
       <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
       <div className={styles.filtersSection}>
         <TextFieldComponent
-          sx={{ maxWidth: 500, width: "100%", marginLeft: "10%", marginRight: "10%" }}
+          sx={{
+            maxWidth: 500,
+            width: "100%",
+            marginLeft: "10%",
+            marginRight: "10%",
+          }}
           label={"Filter by name or episode (ex. S01 or S01E02)"}
           onChange={handleInputChange}
         />

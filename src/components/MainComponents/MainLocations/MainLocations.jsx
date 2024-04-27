@@ -9,42 +9,36 @@ import { ModalFiltersButton } from "../../primitivs/ModalFiltersButton/ModalFilt
 import { TextFieldComponent } from "../../primitivs/TextField/TextField";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetLocationsQuery } from "../../../store/services/rickAndMortyApi";
-import {
-  renderCardsAction,
-  setFiltersAction,
-  setPageAction,
-  setSearchTextAction,
-} from "../../../store/reducers/charactersPageReducer";
+import { Slice } from "../../../store/reducers/charactersPageReducer";
 
 export const MainLocations = () => {
   const dispatch = useDispatch();
 
-  const filters = useSelector((state) => state.charactersPage.filters);
-  const setFilters = (payload) => dispatch(setFiltersAction(payload));
+  const { page, filters, renderCards, searchText } = useSelector(
+    (state) => state.charactersPage
+  );
+  const { setPage, setFilters, setRenderCards, setSearchText } = Slice.actions;
 
-  const renderLocations = useSelector((state) => state.charactersPage.renderCards);
-  const setRenderLocations = () => dispatch(renderCardsAction());
-
-  const searchText = useSelector((state) => state.charactersPage.searchText);
-  const setSearchText = (payload) => dispatch(setSearchTextAction(payload));
-
-  const page = useSelector((state) => state.charactersPage.page);
-  const nextPageAction = () => dispatch(setPageAction());
-
-  const { data: dataLocations, isLoading } = useGetLocationsQuery({ page, searchText, filters });
+  const { data: dataLocations, isLoading } = useGetLocationsQuery({
+    page,
+    searchText,
+    filters,
+  });
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
-    setSearchText(event.target.value);
+    dispatch(setSearchText(event.target.value));
   };
   const handleSelectChange = (event) => {
-    setFilters({ ...filters, [event.target.name]: event.target.value });
+    dispatch(
+      setFilters({ ...filters, [event.target.name]: event.target.value })
+    );
   };
   const handleClick = () => {
-    if (renderLocations > dataLocations.results.length) {
-      nextPageAction();
+    if (renderCards > dataLocations.results.length) {
+      dispatch(setPage());
     }
-    setRenderLocations();
+    dispatch(setRenderCards());
   };
 
   const renderCardComponents = () => {
@@ -52,7 +46,7 @@ export const MainLocations = () => {
       return null;
     }
     return dataLocations.results
-      .slice(0, renderLocations)
+      .slice(0, renderCards)
       .map(({ type, name, id }) => (
         <CardLocations
           onClick={() => navigate(`/locations/${id}`)}

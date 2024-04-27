@@ -3,7 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
 import { CardCharacters } from "../../primitivs/CardCharacters/CardCharacters";
 import { useDispatch, useSelector } from "react-redux";
-import { setLocationsAction } from "../../../store/reducers/charactersPageReducer";
+import {
+  Slice,
+  setLocationsAction,
+} from "../../../store/reducers/charactersPageReducer";
 import { LoadingComponent } from "../../primitivs/LoadingComponent/LoadingComponent";
 import { useEffect } from "react";
 import {
@@ -13,26 +16,26 @@ import {
 
 export const MainLocationDetails = () => {
   const { id } = useParams();
-
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
 
-  const locations = useSelector((state) => state.charactersPage.locations);
-  const setLocations = (payload) => dispatch(setLocationsAction(payload));
+  const { locations } = useSelector((state) => state.charactersPage);
+  const { setLocations } = Slice.actions;
 
   const { data: locationDetails, isLoading } = useGetLocationsQuery({ id });
 
   let residentsId = [];
   if (locationDetails) {
-    residentsId = locationDetails.residents.map((url) => url.split("/").slice(-1)[0]);
+    residentsId = locationDetails.residents.map(
+      (url) => url.split("/").slice(-1)[0]
+    );
   }
 
   const { data: characterDetails } = useGetCharactersQuery({ ...residentsId });
 
   useEffect(() => {
     if (characterDetails) {
-      setLocations(characterDetails.results);
+      dispatch(setLocations(characterDetails.results));
     }
   }, [characterDetails]);
 
@@ -76,7 +79,9 @@ export const MainLocationDetails = () => {
             </div>
             <div className={styles.spanContainer}>
               <span className={styles.spanHead}>Dimension</span>
-              <span className={styles.spanContent}>{locationDetails.dimension}</span>
+              <span className={styles.spanContent}>
+                {locationDetails.dimension}
+              </span>
             </div>
           </div>
         </div>

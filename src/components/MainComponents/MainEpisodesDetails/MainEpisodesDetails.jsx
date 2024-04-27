@@ -3,7 +3,7 @@ import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
 import { useNavigate, useParams } from "react-router-dom";
 import { CardCharacters } from "../../primitivs/CardCharacters/CardCharacters";
 import { useDispatch, useSelector } from "react-redux";
-import { setEpisodesAction } from "../../../store/reducers/charactersPageReducer";
+import { Slice } from "../../../store/reducers/charactersPageReducer";
 import { LoadingComponent } from "../../primitivs/LoadingComponent/LoadingComponent";
 import { useEffect } from "react";
 import {
@@ -16,19 +16,21 @@ export const MainEpisodesDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const episodes = useSelector((state) => state.charactersPage.episodes);
-  const setEpisodes = (payload) => dispatch(setEpisodesAction(payload));
+  const { episodes } = useSelector((state) => state.charactersPage);
+  const { setEpisodes } = Slice.actions;
 
   const { data: episodeDetails, isLoading } = useGetEpisodesQuery({ id });
 
   let charactersId = [];
   if (episodeDetails) {
-    charactersId = episodeDetails.characters.map((url) => url.split("/").slice(-1)[0]);
+    charactersId = episodeDetails.characters.map(
+      (url) => url.split("/").slice(-1)[0]
+    );
   }
   const { data: episodeState } = useGetCharactersQuery({ ...charactersId });
   useEffect(() => {
     if (episodeState) {
-      setEpisodes(episodeState.results);
+      dispatch(setEpisodes(episodeState.results));
     }
   }, [episodeState]);
 
@@ -61,11 +63,15 @@ export const MainEpisodesDetails = () => {
           <div className={styles.infoSection}>
             <div className={styles.spanContainer}>
               <span className={styles.spanHead}>Episode</span>
-              <span className={styles.spanContent}>{episodeDetails.episode}</span>
+              <span className={styles.spanContent}>
+                {episodeDetails.episode}
+              </span>
             </div>
             <div className={styles.spanContainer}>
               <span className={styles.spanHead}>Date</span>
-              <span className={styles.spanContent}>{episodeDetails.air_date}</span>
+              <span className={styles.spanContent}>
+                {episodeDetails.air_date}
+              </span>
             </div>
           </div>
         </div>

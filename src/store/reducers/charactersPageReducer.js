@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 const defaultState = {
   page: 0,
   searchText: "",
@@ -14,65 +16,41 @@ const defaultState = {
   locations: [],
 };
 
-const SET_PAGE = "SET_PAGE";
-const SEARCH_TEXT = "SEARCH_TEXT";
-const RENDER_CHARACTERS = "RENDER_CHARACTERS";
-const PREVIEW_VALUE_CHARACTERS_STEP = 8;
-const SET_FILTERS = "SET_FILTERS";
-const EPISODES = "EPISODES";
-const LOCATIONS = "LOCATIONS";
-const RENDER_CARDS = "RENDER_CARDS";
-const PREVIEW_VALUE_CARDS_STEP = 12;
-
-export const charactersPageReducer = (state = defaultState, action) => {
-  switch (action.type) {
-    case SET_PAGE:
-      return {
-        ...state,
-        page: state.page + 1,
-      };
-    case SEARCH_TEXT:
-      return {
-        ...state,
-        searchText: action.payload,
-      };
-    case RENDER_CHARACTERS:
-      return {
-        ...state,
-        renderCharacters: state.renderCharacters + PREVIEW_VALUE_CHARACTERS_STEP,
-      };
-    case SET_FILTERS:
-      return {
-        ...state,
-        filters: action.payload,
-      };
-    case EPISODES:
-      return {
-        ...state,
-        episodes: action.payload,
-      };
-    case LOCATIONS:
-      return {
-        ...state,
-        locations: action.payload,
-      };
-    case RENDER_CARDS:
-      return {
-        ...state,
-        renderCards: state.renderCards + PREVIEW_VALUE_CARDS_STEP,
-      };
-    default:
-      return state;
-  }
-};
-
-export const setLocationsAction = (payload) => ({ type: LOCATIONS, payload });
-export const renderCardsAction = () => ({ type: RENDER_CARDS });
-export const setEpisodesAction = (payload) => ({ type: EPISODES, payload });
-export const setFiltersAction = (payload) => ({ type: SET_FILTERS, payload });
-export const renderCharactersAction = () => ({ type: RENDER_CHARACTERS });
-export const setSearchTextAction = (payload) => ({
-  type: SEARCH_TEXT,
-  payload,
+export const Slice = createSlice({
+  name: "charactersPage",
+  initialState: defaultState,
+  reducers: {
+    setPage: (state) => {
+      state.page += 1;
+    },
+    setSearchText: (state, action) => {
+      state.searchText = action.payload;
+    },
+    setRenderCharacters: (state) => {
+      state.renderCharacters += 8;
+    },
+    setFilters: (state, action) => {
+      state.filters = action.payload;
+    },
+    setEpisodes: (state, action) => {
+      state.episodes = action.payload;
+    },
+    setLocations: (state, action) => {
+      state.locations = action.payload;
+    },
+    setRenderCards: (state) => {
+      state.renderCards += 12;
+    },
+  },
 });
-export const setPageAction = () => ({ type: SET_PAGE });
+export const charactersPageReducer = Slice.reducer;
+
+export const {
+  setPage,
+  setSearchText,
+  setRenderCharacters,
+  setFilters,
+  setEpisodes,
+  setLocations,
+  setRenderCards,
+} = Slice.actions;
