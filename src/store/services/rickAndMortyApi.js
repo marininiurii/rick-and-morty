@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const getQueryString = (queryParams) => {
   return Object.entries(queryParams)
-    .filter(([key, value]) => value !== undefined)
+    .filter(([_, value]) => value !== undefined)
     .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
     .join("&");
 };
@@ -50,7 +50,23 @@ export const rickAndMortyApi = createApi({
         return `episode?page=${page}&name=${searchText}`;
       },
     }),
+    getCharactersCollection: builder.query({
+      query: (charactersId = []) => {
+        return `character/${charactersId.join(",")}`;
+      },
+    }),
+    getEpisodesCollection: builder.query({
+      query: (episodesPages = []) => {
+        return `episode/${episodesPages.join(",")}`;
+      },
+    }),
   }),
 });
 
-export const { useGetCharactersQuery, useGetLocationsQuery, useGetEpisodesQuery } = rickAndMortyApi;
+export const {
+  useGetCharactersQuery,
+  useGetLocationsQuery,
+  useGetEpisodesQuery,
+  useGetCharactersCollectionQuery,
+  useGetEpisodesCollectionQuery,
+} = rickAndMortyApi;

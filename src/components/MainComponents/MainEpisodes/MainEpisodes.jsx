@@ -1,27 +1,25 @@
 import styles from "./MainEpisodes.module.css";
 import logoGeneral from "../../../assets/svg/rick-and-morty2 1.svg";
-import { BasicButton } from "../../primitivs/Button/Button";
-import { CardEpisodes } from "../../primitivs/CardEpisodes/CardEpisodes";
+import { BasicButton } from "../../UI/Button/Button";
+import { CardEpisodes } from "../../UI/CardEpisodes/CardEpisodes";
 import { useNavigate } from "react-router-dom";
-import { TextFieldComponent } from "../../primitivs/TextField/TextField";
+import { TextFieldComponent } from "../../UI/TextField/TextField";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetEpisodesQuery } from "../../../store/services/rickAndMortyApi";
-import { Slice } from "../../../store/reducers/charactersPageReducer";
+import { StateSlice } from "../../../store/reducers/charactersPageReducer";
+import { LoadingComponent } from "../../UI/LoadingComponent/LoadingComponent";
 
 export const MainEpisodes = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const { searchText, page, renderCards } = useSelector(
-    (state) => state.charactersPage
-  );
-  const { setSearchText, setPage, setRenderCards } = Slice.actions;
+  const { searchText, page, renderCards } = useSelector((state) => state.reducer);
+  const { setSearchText, setPage, setRenderCards } = StateSlice.actions;
 
   const { data: dataEpisodes, isLoading } = useGetEpisodesQuery({
     page,
     searchText,
   });
-
-  const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     dispatch(setSearchText(event.target.value));
@@ -34,23 +32,26 @@ export const MainEpisodes = () => {
   };
 
   const renderCardComponents = () => {
-    if (isLoading) {
-      return null;
-    }
-    return dataEpisodes.results
-      .slice(0, renderCards)
-      .map(({ name, air_date, episode, id }) => (
-        <CardEpisodes
-          onClick={() => navigate(`/episodes/${id}`)}
-          className={styles.card}
-          name={name}
-          air_date={air_date}
-          episode={episode}
-          key={id}
-        />
-      ));
+    return (
+      dataEpisodes &&
+      dataEpisodes.results
+        .slice(0, renderCards)
+        .map(({ name, air_date, episode, id }) => (
+          <CardEpisodes
+            onClick={() => navigate(`/episodes/${id}`)}
+            className={styles.card}
+            name={name}
+            air_date={air_date}
+            episode={episode}
+            key={id}
+          />
+        ))
+    );
   };
 
+  if (isLoading) {
+    return <LoadingComponent />;
+  }
   return (
     <main className={styles.main}>
       <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />

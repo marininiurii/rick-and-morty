@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { rickAndMortyApi } from "./services/rickAndMortyApi";
-import { charactersPageReducer } from "./reducers/charactersPageReducer";
+import { reducer } from "./reducers/charactersPageReducer";
 
 export const store = configureStore({
   reducer: {
     [rickAndMortyApi.reducerPath]: rickAndMortyApi.reducer,
-    charactersPage: charactersPageReducer,
+    reducer,
   },
 
   middleware: (getDefaultMiddleware) =>

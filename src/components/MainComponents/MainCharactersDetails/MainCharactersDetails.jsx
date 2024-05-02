@@ -1,47 +1,34 @@
 import styles from "./MainCharactersDetails.module.css";
 import ArrowLink from "../../../assets/svg/arrow_forward.svg";
 import { Link, useParams } from "react-router-dom";
-import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
+import { ArrowGoBack } from "../../UI/ArrowGoBack/ArrowGoBack";
 import { useDispatch, useSelector } from "react-redux";
-import { Slice } from "../../../store/reducers/charactersPageReducer";
-import { LoadingComponent } from "../../primitivs/LoadingComponent/LoadingComponent";
+import { LoadingComponent } from "../../UI/LoadingComponent/LoadingComponent";
 import { useEffect } from "react";
 import {
   useGetCharactersQuery,
+  useGetEpisodesCollectionQuery,
   useGetEpisodesQuery,
 } from "../../../store/services/rickAndMortyApi";
+import { StateSlice } from "../../../store/reducers/charactersPageReducer";
 
 export const MainCharactersDetails = () => {
+  const characterInformation = ["gender", "status", "species", "origin", "type"];
   const { id } = useParams();
-
   const dispatch = useDispatch();
 
-  const { episodes } = useSelector((state) => state.charactersPage);
-  const { setEpisodes } = Slice.actions;
-
+  const { episodes } = useSelector((state) => state.reducer);
+  const { setEpisodes } = StateSlice.actions;
   const { data: characterDetails, isLoading } = useGetCharactersQuery({ id });
 
-  let episodesPages = [];
-  if (characterDetails) {
-    episodesPages = characterDetails.episode.map(
-      (url) => url.split("/").slice(-1)[0]
-    );
-  }
-
-  const { data: episodeState } = useGetEpisodesQuery({ ...episodesPages });
+  const episodesPages = characterDetails?.episode.map((url) => url.split("/").pop());
+  const { data: episodeState } = useGetEpisodesCollectionQuery(episodesPages);
 
   useEffect(() => {
     if (episodeState) {
-      dispatch(setEpisodes(episodeState.results));
+      dispatch(setEpisodes(episodeState));
     }
   }, [episodeState]);
-  const characterInformation = [
-    "gender",
-    "status",
-    "species",
-    "origin",
-    "type",
-  ];
 
   const renderInformations = () => {
     return characterInformation.map((information) => {
@@ -71,11 +58,7 @@ export const MainCharactersDetails = () => {
           <span className={styles.spanEpisode}>{episode}</span>
           <span className={styles.spanName}>{name}</span>
           <span className={styles.spanAirDate}>{air_date}</span>
-          <img
-            className={styles.imageArrowLink}
-            src={ArrowLink}
-            alt="Стрелка"
-          />
+          <img className={styles.imageArrowLink} src={ArrowLink} alt="Стрелка" />
         </div>
       </Link>
     ));
@@ -91,11 +74,7 @@ export const MainCharactersDetails = () => {
           <ArrowGoBack className={styles.arrow} href={"/characters"} />
         </div>
         <div className={styles.logoSection}>
-          <img
-            className={styles.image}
-            src={characterDetails.image}
-            alt="Логотип"
-          />
+          <img className={styles.image} src={characterDetails.image} alt="Логотип" />
           <h1>{characterDetails.name}</h1>
         </div>
       </div>
@@ -105,20 +84,12 @@ export const MainCharactersDetails = () => {
           {renderInformations()}
           <Link
             className={styles.link}
-            to={`/locations/${
-              characterDetails.location.url.split("/").slice(-1)[0]
-            }`}
+            to={`/locations/${characterDetails.location.url.split("/").slice(-1)[0]}`}
           >
             <div className={styles.spanContainer}>
               <span className={styles.spanEpisode}>Location</span>
-              <span className={styles.spanName}>
-                {characterDetails.location.name}
-              </span>
-              <img
-                className={styles.imageArrowLink}
-                src={ArrowLink}
-                alt="Стрелка"
-              />
+              <span className={styles.spanName}>{characterDetails.location.name}</span>
+              <img className={styles.imageArrowLink} src={ArrowLink} alt="Стрелка" />
             </div>
           </Link>
         </div>

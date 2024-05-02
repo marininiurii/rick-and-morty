@@ -16,8 +16,8 @@ const defaultState = {
   locations: [],
 };
 
-export const Slice = createSlice({
-  name: "charactersPage",
+export const StateSlice = createSlice({
+  name: "StateSlice",
   initialState: defaultState,
   reducers: {
     setPage: (state) => {
@@ -43,7 +43,7 @@ export const Slice = createSlice({
     },
   },
 });
-export const charactersPageReducer = Slice.reducer;
+export const reducer = StateSlice.reducer;
 
 export const {
   setPage,
@@ -53,4 +53,4 @@ export const {
   setEpisodes,
   setLocations,
   setRenderCards,
-} = Slice.actions;
+} = StateSlice.actions;

@@ -6,6 +6,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import CloseIcon from "@mui/icons-material/Close";
+import { useState } from "react";
 
 export const MenuNavigation = ({ className }) => {
   const styles = {
@@ -14,7 +16,7 @@ export const MenuNavigation = ({ className }) => {
     color: "#000000",
     marginRight: "10px",
   };
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     top: false,
     left: false,
     bottom: false,
@@ -22,10 +24,7 @@ export const MenuNavigation = ({ className }) => {
   });
 
   const toggleDrawer = (anchor, open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
+    if (event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
       return;
     }
 
@@ -35,6 +34,7 @@ export const MenuNavigation = ({ className }) => {
   const list = (anchor) => (
     <Box
       sx={{
+        position: "relative",
         width: "auto",
         display: "flex",
         justifyContent: "center",
@@ -53,6 +53,18 @@ export const MenuNavigation = ({ className }) => {
           </ListItem>
         ))}
       </List>
+      <CloseIcon
+        className={styles.menuNavigation}
+        sx={{
+          position: "absolute",
+          top: 15,
+          right: 15,
+          "&:hover": {
+            background: "rgb(230, 230, 230)",
+            borderRadius: 5,
+          },
+        }}
+      />
     </Box>
   );
 

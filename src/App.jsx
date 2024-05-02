@@ -1,6 +1,5 @@
 import styles from "./App.module.css";
 import { Routes, Route } from "react-router-dom";
-import { Suspense } from "react";
 import { Header } from "./components/Header/Header";
 import { Footer } from "./components/Footer/Footer";
 import { MainCharacters } from "./components/MainComponents/MainCharacters/MainCharacters";
@@ -29,11 +28,3 @@ export const App = () => {
     </div>
   );
 };
-
-export default function WrappedApp() {
-  return (
-    <Suspense fallback="...loading">
-      <App />
-    </Suspense>
-  );
-}

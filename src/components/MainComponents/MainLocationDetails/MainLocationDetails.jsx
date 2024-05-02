@@ -1,46 +1,38 @@
 import styles from "./MainLocationDetails.module.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
-import { CardCharacters } from "../../primitivs/CardCharacters/CardCharacters";
+import { ArrowGoBack } from "../../UI/ArrowGoBack/ArrowGoBack";
+import { CardCharacters } from "../../UI/CardCharacters/CardCharacters";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Slice,
-  setLocationsAction,
-} from "../../../store/reducers/charactersPageReducer";
-import { LoadingComponent } from "../../primitivs/LoadingComponent/LoadingComponent";
+import { LoadingComponent } from "../../UI/LoadingComponent/LoadingComponent";
 import { useEffect } from "react";
 import {
-  useGetCharactersQuery,
+  useGetCharactersCollectionQuery,
   useGetLocationsQuery,
 } from "../../../store/services/rickAndMortyApi";
+import { StateSlice } from "../../../store/reducers/charactersPageReducer";
 
 export const MainLocationDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { locations } = useSelector((state) => state.charactersPage);
-  const { setLocations } = Slice.actions;
+  const { locations } = useSelector((state) => state.reducer);
+  const { setLocations } = StateSlice.actions;
 
   const { data: locationDetails, isLoading } = useGetLocationsQuery({ id });
 
-  let residentsId = [];
-  if (locationDetails) {
-    residentsId = locationDetails.residents.map(
-      (url) => url.split("/").slice(-1)[0]
-    );
-  }
+  const residentsId = locationDetails?.residents.map((url) => url.split("/").pop());
 
-  const { data: characterDetails } = useGetCharactersQuery({ ...residentsId });
+  const { data: characterDetails } = useGetCharactersCollectionQuery(residentsId);
 
   useEffect(() => {
     if (characterDetails) {
-      dispatch(setLocations(characterDetails.results));
+      dispatch(setLocations(characterDetails));
     }
   }, [characterDetails]);
 
   const renderCharactersLocation = () => {
-    if (locations.length === 0) {
+    if (!locations) {
       return <div className={styles.noResidentsContainer}>No Residents</div>;
     }
     let data = locations;
@@ -79,9 +71,7 @@ export const MainLocationDetails = () => {
             </div>
             <div className={styles.spanContainer}>
               <span className={styles.spanHead}>Dimension</span>
-              <span className={styles.spanContent}>
-                {locationDetails.dimension}
-              </span>
+              <span className={styles.spanContent}>{locationDetails.dimension}</span>
             </div>
           </div>
         </div>

@@ -1,38 +1,38 @@
 import styles from "./MainLocations.module.css";
 import logoGeneral from "../../../assets/svg/rick-and-morty 1.svg";
 import { data } from "./constants";
-import { BasicButton } from "../../primitivs/Button/Button";
-import { SelectField } from "../../primitivs/Select/Select";
-import { CardLocations } from "../../primitivs/CardLocations/CardLocations";
+import { BasicButton } from "../../UI/Button/Button";
+import { SelectField } from "../../UI/Select/Select";
+import { CardLocations } from "../../UI/CardLocations/CardLocations";
 import { useNavigate } from "react-router-dom";
-import { ModalFiltersButton } from "../../primitivs/ModalFiltersButton/ModalFiltersButton";
-import { TextFieldComponent } from "../../primitivs/TextField/TextField";
+import { ModalFiltersButton } from "../../UI/ModalFiltersButton/ModalFiltersButton";
+import { TextFieldComponent } from "../../UI/TextField/TextField";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetLocationsQuery } from "../../../store/services/rickAndMortyApi";
-import { Slice } from "../../../store/reducers/charactersPageReducer";
+import { StateSlice } from "../../../store/reducers/charactersPageReducer";
+import { LoadingComponent } from "../../UI/LoadingComponent/LoadingComponent";
 
 export const MainLocations = () => {
+  const selectsNames = ["type", "dimension"];
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { page, filters, renderCards, searchText } = useSelector(
-    (state) => state.charactersPage
+    (state) => state.reducer
   );
-  const { setPage, setFilters, setRenderCards, setSearchText } = Slice.actions;
+  const { setPage, setFilters, setRenderCards, setSearchText } = StateSlice.actions;
 
   const { data: dataLocations, isLoading } = useGetLocationsQuery({
     page,
     searchText,
     filters,
   });
-  const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     dispatch(setSearchText(event.target.value));
   };
   const handleSelectChange = (event) => {
-    dispatch(
-      setFilters({ ...filters, [event.target.name]: event.target.value })
-    );
+    dispatch(setFilters({ ...filters, [event.target.name]: event.target.value }));
   };
   const handleClick = () => {
     if (renderCards > dataLocations.results.length) {
@@ -42,22 +42,21 @@ export const MainLocations = () => {
   };
 
   const renderCardComponents = () => {
-    if (isLoading) {
-      return null;
-    }
-    return dataLocations.results
-      .slice(0, renderCards)
-      .map(({ type, name, id }) => (
-        <CardLocations
-          onClick={() => navigate(`/locations/${id}`)}
-          type={type}
-          name={name}
-          key={id}
-        />
-      ));
+    return (
+      dataLocations &&
+      dataLocations.results
+        .slice(0, renderCards)
+        .map(({ type, name, id }) => (
+          <CardLocations
+            onClick={() => navigate(`/locations/${id}`)}
+            type={type}
+            name={name}
+            key={id}
+          />
+        ))
+    );
   };
 
-  const selectsNames = ["type", "dimension"];
   const renderSelects = (className) =>
     selectsNames.map((selectName, index) => (
       <SelectField
@@ -70,6 +69,9 @@ export const MainLocations = () => {
       />
     ));
 
+  if (isLoading) {
+    return <LoadingComponent />;
+  }
   return (
     <main className={styles.main}>
       <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />

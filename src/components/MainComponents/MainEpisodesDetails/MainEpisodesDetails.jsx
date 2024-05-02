@@ -1,41 +1,36 @@
 import styles from "./MainEpisodesDetails.module.css";
-import { ArrowGoBack } from "../../primitivs/ArrowGoBack/ArrowGoBack";
+import { ArrowGoBack } from "../../UI/ArrowGoBack/ArrowGoBack";
 import { useNavigate, useParams } from "react-router-dom";
-import { CardCharacters } from "../../primitivs/CardCharacters/CardCharacters";
+import { CardCharacters } from "../../UI/CardCharacters/CardCharacters";
 import { useDispatch, useSelector } from "react-redux";
-import { Slice } from "../../../store/reducers/charactersPageReducer";
-import { LoadingComponent } from "../../primitivs/LoadingComponent/LoadingComponent";
+import { LoadingComponent } from "../../UI/LoadingComponent/LoadingComponent";
 import { useEffect } from "react";
 import {
-  useGetCharactersQuery,
+  useGetCharactersCollectionQuery,
   useGetEpisodesQuery,
 } from "../../../store/services/rickAndMortyApi";
+import { StateSlice } from "../../../store/reducers/charactersPageReducer";
 
 export const MainEpisodesDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { episodes } = useSelector((state) => state.charactersPage);
-  const { setEpisodes } = Slice.actions;
+  const { episodes } = useSelector((state) => state.reducer);
+  const { setEpisodes } = StateSlice.actions;
 
   const { data: episodeDetails, isLoading } = useGetEpisodesQuery({ id });
+  const charactersId = episodeDetails?.characters.map((url) => url.split("/").pop());
+  const { data: episodeState } = useGetCharactersCollectionQuery(charactersId);
 
-  let charactersId = [];
-  if (episodeDetails) {
-    charactersId = episodeDetails.characters.map(
-      (url) => url.split("/").slice(-1)[0]
-    );
-  }
-  const { data: episodeState } = useGetCharactersQuery({ ...charactersId });
   useEffect(() => {
     if (episodeState) {
-      dispatch(setEpisodes(episodeState.results));
+      dispatch(setEpisodes(episodeState));
     }
   }, [episodeState]);
 
   const renderCharactersEpisode = () => {
-    return episodes.map(({ image, name, species, id }) => {
+    return episodes?.map(({ image, name, species, id }) => {
       return (
         <CardCharacters
           onClick={() => navigate(`/characters/${id}`)}
@@ -63,15 +58,11 @@ export const MainEpisodesDetails = () => {
           <div className={styles.infoSection}>
             <div className={styles.spanContainer}>
               <span className={styles.spanHead}>Episode</span>
-              <span className={styles.spanContent}>
-                {episodeDetails.episode}
-              </span>
+              <span className={styles.spanContent}>{episodeDetails.episode}</span>
             </div>
             <div className={styles.spanContainer}>
               <span className={styles.spanHead}>Date</span>
-              <span className={styles.spanContent}>
-                {episodeDetails.air_date}
-              </span>
+              <span className={styles.spanContent}>{episodeDetails.air_date}</span>
             </div>
           </div>
         </div>
