@@ -1,14 +1,13 @@
 import styles from "./MainCharactersDetails.module.css";
 import ArrowLink from "../../../assets/svg/arrow_forward.svg";
 import { Link, useParams } from "react-router-dom";
-import { ArrowGoBack } from "../../UI/ArrowGoBack/ArrowGoBack";
+import { ArrowGoBack } from "../../ui/ArrowGoBack/ArrowGoBack";
 import { useDispatch, useSelector } from "react-redux";
-import { LoadingComponent } from "../../UI/LoadingComponent/LoadingComponent";
+import { LoadingComponent } from "../../ui/LoadingComponent/LoadingComponent";
 import { useEffect } from "react";
 import {
   useGetCharactersQuery,
   useGetEpisodesCollectionQuery,
-  useGetEpisodesQuery,
 } from "../../../store/services/rickAndMortyApi";
 import { StateSlice } from "../../../store/reducers/charactersPageReducer";
 
@@ -71,7 +70,7 @@ export const MainCharactersDetails = () => {
     <div className={styles.main}>
       <div className={styles.headSection}>
         <div className={styles.goBackSection}>
-          <ArrowGoBack className={styles.arrow} href={"/characters"} />
+          <ArrowGoBack className={styles.arrow} href={"/"} />
         </div>
         <div className={styles.logoSection}>
           <img className={styles.image} src={characterDetails.image} alt="Логотип" />

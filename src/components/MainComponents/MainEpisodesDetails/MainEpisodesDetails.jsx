@@ -1,9 +1,9 @@
 import styles from "./MainEpisodesDetails.module.css";
-import { ArrowGoBack } from "../../UI/ArrowGoBack/ArrowGoBack";
+import { ArrowGoBack } from "../../ui/ArrowGoBack/ArrowGoBack";
 import { useNavigate, useParams } from "react-router-dom";
-import { CardCharacters } from "../../UI/CardCharacters/CardCharacters";
+import { CardCharacters } from "../../ui/CardCharacters/CardCharacters";
 import { useDispatch, useSelector } from "react-redux";
-import { LoadingComponent } from "../../UI/LoadingComponent/LoadingComponent";
+import { LoadingComponent } from "../../ui/LoadingComponent/LoadingComponent";
 import { useEffect } from "react";
 import {
   useGetCharactersCollectionQuery,
@@ -30,7 +30,7 @@ export const MainEpisodesDetails = () => {
   }, [episodeState]);
 
   const renderCharactersEpisode = () => {
-    return episodes?.map(({ image, name, species, id }) => {
+    return episodes.map(({ image, name, species, id }) => {
       return (
         <CardCharacters
           onClick={() => navigate(`/characters/${id}`)}

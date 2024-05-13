@@ -1,9 +1,9 @@
 import styles from "./MainLocationDetails.module.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowGoBack } from "../../UI/ArrowGoBack/ArrowGoBack";
-import { CardCharacters } from "../../UI/CardCharacters/CardCharacters";
+import { ArrowGoBack } from "../../ui/ArrowGoBack/ArrowGoBack";
+import { CardCharacters } from "../../ui/CardCharacters/CardCharacters";
 import { useDispatch, useSelector } from "react-redux";
-import { LoadingComponent } from "../../UI/LoadingComponent/LoadingComponent";
+import { LoadingComponent } from "../../ui/LoadingComponent/LoadingComponent";
 import { useEffect } from "react";
 import {
   useGetCharactersCollectionQuery,

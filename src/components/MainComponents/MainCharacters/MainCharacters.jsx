@@ -1,26 +1,27 @@
 import styles from "./MainCharacters.module.css";
 import logoGeneral from "../../../assets/svg/logo-general.svg";
 import { dataSelects } from "./constants";
-import { SelectField } from "../../UI/Select/Select";
-import { CardCharacters } from "../../UI/CardCharacters/CardCharacters";
-import { BasicButton } from "../../UI/Button/Button";
+import { SelectField } from "../../ui/Select/Select";
+import { CardCharacters } from "../../ui/CardCharacters/CardCharacters";
+import { BasicButton } from "../../ui/Button/Button";
 import { useNavigate } from "react-router-dom";
-import { ModalFiltersButton } from "../../UI/ModalFiltersButton/ModalFiltersButton";
-import { TextFieldComponent } from "../../UI/TextField/TextField";
+import { ModalFiltersButton } from "../../ui/ModalFiltersButton/ModalFiltersButton";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetCharactersQuery } from "../../../store/services/rickAndMortyApi";
 import { StateSlice } from "../../../store/reducers/charactersPageReducer";
-import { LoadingComponent } from "../../UI/LoadingComponent/LoadingComponent";
+import { LoadingComponent } from "../../ui/LoadingComponent/LoadingComponent";
+import { SELECTS_NAMES } from "./constants";
+import { CustomTextField } from "../../ui/CustomTextField/CustomTextField";
 
 export const MainCharacters = () => {
-  const selectsNames = ["species", "gender", "status"];
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { page, filters, renderCharacters, searchText } = useSelector(
+  const { page, filters, numberRenderedCharacters, searchText } = useSelector(
     (state) => state.reducer
   );
-  const { setPage, setFilters, setRenderCharacters, setSearchText } = StateSlice.actions;
+  const { setPage, setFilters, setNumberRenderedCharacters, setSearchText } =
+    StateSlice.actions;
   const { data: dataCharacters, isLoading } = useGetCharactersQuery({
     page,
     searchText,
@@ -33,18 +34,18 @@ export const MainCharacters = () => {
   const handleSelectChange = (event) => {
     dispatch(setFilters({ ...filters, [event.target.name]: event.target.value }));
   };
-  const handleClick = () => {
-    if (renderCharacters >= dataCharacters.results.length) {
+  const handleClickLoadMore = () => {
+    if (numberRenderedCharacters >= dataCharacters.results.length) {
       dispatch(setPage());
     }
-    dispatch(setRenderCharacters());
+    dispatch(setNumberRenderedCharacters());
   };
 
   const renderCardComponents = () => {
     return (
       dataCharacters &&
       dataCharacters.results
-        .slice(0, renderCharacters)
+        .slice(0, numberRenderedCharacters)
         .map(({ image, name, species, id }) => {
           const props = {
             onClick: () => navigate(`/characters/${id}`),
@@ -59,7 +60,7 @@ export const MainCharacters = () => {
   };
 
   const renderSelects = (className) =>
-    selectsNames.map((selectName, index) => (
+    SELECTS_NAMES.map((selectName, index) => (
       <SelectField
         className={className}
         value={filters[selectName]}
@@ -76,7 +77,7 @@ export const MainCharacters = () => {
     <main className={styles.main}>
       <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
       <div className={styles.filtersSection}>
-        <TextFieldComponent
+        <CustomTextField
           sx={{ width: 240 }}
           label={"Filter by name..."}
           onChange={handleInputChange}
@@ -91,7 +92,7 @@ export const MainCharacters = () => {
       </div>
       <div className={styles.cardsSection}>{renderCardComponents()}</div>
       <div className={styles.buttonSection}>
-        <BasicButton onClick={handleClick} className={styles.button}>
+        <BasicButton onClick={handleClickLoadMore} className={styles.button}>
           Load More
         </BasicButton>
       </div>

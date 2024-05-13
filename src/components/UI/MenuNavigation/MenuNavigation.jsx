@@ -8,14 +8,9 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
+import { MENU_NAVIGATION_LINKS, STYLES } from "./constants";
 
 export const MenuNavigation = ({ className }) => {
-  const styles = {
-    fontSize: "18px",
-    fontWeight: "700",
-    color: "#000000",
-    marginRight: "10px",
-  };
   const [state, setState] = useState({
     top: false,
     left: false,
@@ -33,38 +28,21 @@ export const MenuNavigation = ({ className }) => {
 
   const list = (anchor) => (
     <Box
-      sx={{
-        position: "relative",
-        width: "auto",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+      sx={STYLES.box}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {["Characters", "Locations", "Episodes"].map((text) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton href={`/${text.toLowerCase()}`}>
-              <ListItemText primary={text} />
+        {MENU_NAVIGATION_LINKS.map(([name, path]) => (
+          <ListItem key={name} disablePadding>
+            <ListItemButton href={`/${path}`}>
+              <ListItemText primary={name} />
             </ListItemButton>
           </ListItem>
         ))}
       </List>
-      <CloseIcon
-        className={styles.menuNavigation}
-        sx={{
-          position: "absolute",
-          top: 15,
-          right: 15,
-          "&:hover": {
-            background: "rgb(230, 230, 230)",
-            borderRadius: 5,
-          },
-        }}
-      />
+      <CloseIcon sx={STYLES.closeIcon} />
     </Box>
   );
 
@@ -72,7 +50,7 @@ export const MenuNavigation = ({ className }) => {
     <div className={className}>
       {["top"].map((anchor) => (
         <React.Fragment key={anchor}>
-          <Button style={styles} onClick={toggleDrawer("top", true)}>
+          <Button style={STYLES.button} onClick={toggleDrawer("top", true)}>
             Menu
           </Button>
           <Drawer

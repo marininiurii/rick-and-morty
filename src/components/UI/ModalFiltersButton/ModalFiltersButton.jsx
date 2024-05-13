@@ -1,39 +1,17 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  maxWidth: 240,
-  width: "100%",
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+import { STYLES } from "./constants";
+import { useState } from "react";
 
 export const ModalFiltersButton = ({ children, className }) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   return (
     <div className={className}>
-      <Button
-        sx={{
-          width: 240,
-          height: 56,
-          background: "#F2F9FE",
-          boxShadow: "0px 6px 10px 0px #00000024",
-          "0px 1px 18px 0px #0000001F": "0px 3px 5px 0px #00000033",
-          color: "#2196F3",
-        }}
-        onClick={handleOpen}
-      >
+      <Button sx={STYLES.button} onClick={handleOpen}>
         ADVANCED FILTERS
       </Button>
       <Modal
@@ -42,7 +20,7 @@ export const ModalFiltersButton = ({ children, className }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>{children}</Box>
+        <Box sx={STYLES.box}>{children}</Box>
       </Modal>
     </div>
   );

@@ -21,7 +21,7 @@ export const SelectField = ({ data, onChange, value, name, className }) => {
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={value}
-          label="Gender"
+          label={label}
           onChange={onChange}
           name={name}
         >

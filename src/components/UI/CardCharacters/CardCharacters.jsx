@@ -3,51 +3,19 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
+import { STYLES } from "./constants";
 
-export const CardCharacters = ({
-  onClick,
-  image,
-  name,
-  species,
-  gender,
-  status,
-  id,
-}) => {
+export const CardCharacters = ({ onClick, image, name, species, gender, status, id }) => {
   return (
-    <Card
-      onClick={onClick}
-      gender={gender}
-      status={status}
-      id={id}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        width: 260,
-        height: 264,
-        cursor: "pointer",
-        boxShadow:
-          "0px 2px 4px 0px #00000024, 0px 3px 4px 0px #0000001F, 0px 1px 5px 0px #00000033",
-      }}
-    >
-      <CardActionArea
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "stretch",
-        }}
-      >
-        <CardMedia
-          sx={{ height: 0, paddingTop: "65%", objectFit: "cover" }}
-          component="svg"
-          image={image}
-          alt="character"
-        />
+    <Card onClick={onClick} gender={gender} status={status} id={id} sx={STYLES.card}>
+      <CardActionArea sx={STYLES.cardActionArea}>
+        <CardMedia sx={STYLES.cardMedia} component="svg" image={image} alt="character" />
         <CardContent>
           <Typography
             gutterBottom
             variant="h4"
             component="div"
-            sx={{ fontSize: 26, weight: 500 }}
+            sx={STYLES.typographyHead}
           >
             {name}
           </Typography>
@@ -56,7 +24,7 @@ export const CardCharacters = ({
             variant="body2"
             component="div"
             color="text.secondary"
-            sx={{ fontSize: 18, weight: 400 }}
+            sx={STYLES.typographyBody}
           >
             {species}
           </Typography>

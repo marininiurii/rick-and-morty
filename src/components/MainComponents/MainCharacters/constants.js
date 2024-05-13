@@ -17,3 +17,5 @@ export const dataSelects = [
   { items: ["Male", "Female"], label: "Gender" },
   { items: ["Alive", "Dead"], label: "Status" },
 ];
+
+export const SELECTS_NAMES = ["species", "gender", "status"];

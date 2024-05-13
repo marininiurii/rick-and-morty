@@ -1,26 +1,26 @@
 import styles from "./MainLocations.module.css";
 import logoGeneral from "../../../assets/svg/rick-and-morty 1.svg";
-import { data } from "./constants";
-import { BasicButton } from "../../UI/Button/Button";
-import { SelectField } from "../../UI/Select/Select";
-import { CardLocations } from "../../UI/CardLocations/CardLocations";
+import { SELECTS_NAMES, data } from "./constants";
+import { BasicButton } from "../../ui/Button/Button";
+import { SelectField } from "../../ui/Select/Select";
+import { CardLocations } from "../../ui/CardLocations/CardLocations";
 import { useNavigate } from "react-router-dom";
-import { ModalFiltersButton } from "../../UI/ModalFiltersButton/ModalFiltersButton";
-import { TextFieldComponent } from "../../UI/TextField/TextField";
+import { ModalFiltersButton } from "../../ui/ModalFiltersButton/ModalFiltersButton";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetLocationsQuery } from "../../../store/services/rickAndMortyApi";
 import { StateSlice } from "../../../store/reducers/charactersPageReducer";
-import { LoadingComponent } from "../../UI/LoadingComponent/LoadingComponent";
+import { LoadingComponent } from "../../ui/LoadingComponent/LoadingComponent";
+import { CustomTextField } from "../../ui/CustomTextField/CustomTextField";
 
 export const MainLocations = () => {
-  const selectsNames = ["type", "dimension"];
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { page, filters, renderCards, searchText } = useSelector(
+  const { page, filters, numberRenderedCards, searchText } = useSelector(
     (state) => state.reducer
   );
-  const { setPage, setFilters, setRenderCards, setSearchText } = StateSlice.actions;
+  const { setPage, setFilters, setNumberRenderedCards, setSearchText } =
+    StateSlice.actions;
 
   const { data: dataLocations, isLoading } = useGetLocationsQuery({
     page,
@@ -34,18 +34,18 @@ export const MainLocations = () => {
   const handleSelectChange = (event) => {
     dispatch(setFilters({ ...filters, [event.target.name]: event.target.value }));
   };
-  const handleClick = () => {
-    if (renderCards > dataLocations.results.length) {
+  const handleClickLoadMore = () => {
+    if (numberRenderedCards > dataLocations.results.length) {
       dispatch(setPage());
     }
-    dispatch(setRenderCards());
+    dispatch(setNumberRenderedCards());
   };
 
   const renderCardComponents = () => {
     return (
       dataLocations &&
       dataLocations.results
-        .slice(0, renderCards)
+        .slice(0, numberRenderedCards)
         .map(({ type, name, id }) => (
           <CardLocations
             onClick={() => navigate(`/locations/${id}`)}
@@ -58,7 +58,7 @@ export const MainLocations = () => {
   };
 
   const renderSelects = (className) =>
-    selectsNames.map((selectName, index) => (
+    SELECTS_NAMES.map((selectName, index) => (
       <SelectField
         className={className}
         value={filters[selectName]}
@@ -76,7 +76,7 @@ export const MainLocations = () => {
     <main className={styles.main}>
       <img className={styles.logoSection} src={logoGeneral} alt="Логотип" />
       <div className={styles.filtersSection}>
-        <TextFieldComponent
+        <CustomTextField
           sx={{ maxWidth: 326, width: "100%" }}
           label={"Filter by name..."}
           onChange={handleInputChange}
@@ -91,7 +91,7 @@ export const MainLocations = () => {
       </div>
       <div className={styles.cardsSection}>{renderCardComponents()}</div>
       <div className={styles.buttonSection}>
-        <BasicButton onClick={handleClick} className={styles.button}>
+        <BasicButton onClick={handleClickLoadMore} className={styles.button}>
           Load More
         </BasicButton>
       </div>

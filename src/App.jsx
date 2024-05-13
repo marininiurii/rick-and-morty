@@ -16,7 +16,7 @@ export const App = () => {
       <main className={styles.body}>
         <Routes>
           <Route path="/" element={<MainCharacters />} />
-          <Route path="/characters" element={<MainCharacters />} />
+
           <Route path="/locations" element={<MainLocations />} />
           <Route path="/episodes" element={<MainEpisodes />} />
           <Route path="/characters/:id" element={<MainCharactersDetails />} />

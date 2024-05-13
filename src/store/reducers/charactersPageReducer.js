@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const defaultState = {
   page: 0,
   searchText: "",
-  renderCharacters: 8,
-  renderCards: 12,
+  numberRenderedCharacters: 8,
+  numberRenderedCards: 12,
   filters: {
     type: "",
     status: "",
@@ -26,8 +26,8 @@ export const StateSlice = createSlice({
     setSearchText: (state, action) => {
       state.searchText = action.payload;
     },
-    setRenderCharacters: (state) => {
-      state.renderCharacters += 8;
+    setNumberRenderedCharacters: (state) => {
+      state.numberRenderedCharacters += 8;
     },
     setFilters: (state, action) => {
       state.filters = action.payload;
@@ -38,8 +38,8 @@ export const StateSlice = createSlice({
     setLocations: (state, action) => {
       state.locations = action.payload;
     },
-    setRenderCards: (state) => {
-      state.renderCards += 12;
+    setNumberRenderedCards: (state) => {
+      state.numberRenderedCards += 12;
     },
   },
 });
@@ -48,9 +48,9 @@ export const reducer = StateSlice.reducer;
 export const {
   setPage,
   setSearchText,
-  setRenderCharacters,
+  setNumberRenderedCharacters,
   setFilters,
   setEpisodes,
   setLocations,
-  setRenderCards,
+  setNumberRenderedCards,
 } = StateSlice.actions;

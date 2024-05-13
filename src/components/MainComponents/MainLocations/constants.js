@@ -15,3 +15,5 @@ export const data = [
     label: "Dimension",
   },
 ];
+
+export const SELECTS_NAMES = ["type", "dimension"];
